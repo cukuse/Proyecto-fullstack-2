@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +7,26 @@
     <link rel="stylesheet" href="css/estilo-login.css">
 </head>
 <body>
-    <head>
-        <div class="icono-login"><img src="img/icono-login.png" alt=""></div>
+    <header class="cabecilla-login">
+        <div class="icono-login"><a href="index.html"><img src="img/icono-login.svg" alt="Logotipo del sitio"></a></div>
         
-    </head>
+    </header>
     <main>
-        
+        <section>
+            <div>
+                <form class="login-from">
+                    <input type="text" class="box" placeholder="Correo o Nombre De Usuario">
+                    <input type="password" class="box" placeholder="Contraseña">
+                    <div><button id="btn-usuario">Iniciar Sesion</button></div>
+                    <a href="" class="l-contraseña">¿Olvidaste Tu Contraseña?</a>
+                </form>
+            </div>
+        </section>
     </main>
-
     <footer>
-
+        <div>
+            <section><button class="btn-crear-cuenta" onclick="">Crear Cuenta Nueva</button></section>
+        </div>
     </footer>
 </body>
 </html>
