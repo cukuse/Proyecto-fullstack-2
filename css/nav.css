@@ -7,20 +7,24 @@ nav {
     padding: 15px 30px;       
 }
 
-.menu-icon {
-    position: absolute;       
-    left: 30px;               
-    width: 35px;              
+#btn-abrir-menu {
+    position: absolute;
+    object-fit: cover;
+    left: 30px;       
+    width: 35px;
+
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.menu-icon img {
+#btn-abrir-menu img {
     width: 100%;              
     display: block;  
-    transition: transform 0.2s ease-in-out;         
+    transition: transform 0.2s ease-in-out;  
+    mix-blend-mode: multiply;       
 }
 
-.menu-icon img:hover {
+#btn-abrir-menu img:hover {
     transform: scale(1.1); 
 }
 
