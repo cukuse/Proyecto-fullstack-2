@@ -1,0 +1,23 @@
+.features{
+    display: flex;
+    flex-direction: column;
+    gap: 30;
+    padding: 50px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.features > div{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.icono-a,.icono-b,.icono-c{
+    font-size: 2.5rem;
+    color: #1b2a38;
+}
+
+.features p{
+    font-size: 1.1rem;
+}

@@ -1,0 +1,31 @@
+nav {
+    display: flex;
+    align-items: center;      
+    justify-content: center;  
+    position: relative;       
+    background-color: #e6e1d8;
+    padding: 15px 30px;       
+}
+
+.menu-icon {
+    position: absolute;       
+    left: 30px;               
+    width: 35px;              
+    cursor: pointer;
+}
+
+.menu-icon img {
+    width: 100%;              
+    display: block;  
+    transition: transform 0.2s ease-in-out;         
+}
+
+.menu-icon img:hover {
+    transform: scale(1.1); 
+}
+
+.sub-nav {
+    font-size: 1.1rem;        
+    color: #1b2a38;
+    margin: 0;               
+}

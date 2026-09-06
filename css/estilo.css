@@ -1,0 +1,15 @@
+@import url(header.css);
+@import url(body.css);
+@import url(footer.css);
+@import url(nav.css);
+@import url(main.css);
+@import url(features_main.css);
+
+* {
+    color: #1a2b3c;
+    background-color: #f5f0e6;
+    border-bottom-color: #d37c6a;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    accent-color: #d17a6c;
+    line-height: 1.5;   
+}

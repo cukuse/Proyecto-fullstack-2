@@ -1,0 +1,16 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box
+}
+
+body{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: #f8f6f0;
+    color: #1b2a38;
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+}

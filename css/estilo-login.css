@@ -1,0 +1,17 @@
+*{
+    background-color: #1a2b3c;
+}
+
+.icono-login{
+    width: 30%;
+    height: 40%;
+    mix-blend-mode: multiply;
+}
+
+.icono-login img{
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 40%;
+    justify-content: 
+}

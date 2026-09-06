@@ -1,0 +1,61 @@
+.agrevento-sect{
+    position: relative;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.imagen-inicio{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.imagen-inicio img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#btn-agregar-evento{
+    position: relative;
+    z-index: 2;
+    background-color: rgb(208, 122, 0.85);
+    color: #1b2a38;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+
+}
+
+#btn-agregar-evento:hover {
+    background-color: rgba(209, 122, 108, 1); /* Quita la transparencia para que el color sea sólido y brillante */
+    transform: scale(1.05); /* Aumenta el tamaño de todo el botón en un 5% */
+    box-shadow: 0 6px 12px rgba(8, 47, 175, 0.322); /* Hace la sombra más grande y oscura para dar sensación de que se levanta */
+}
+
+.icono-a, .icono-b,.icono-c{
+    width: 10%;
+    height: 10%;
+
+}
+
+.icono-a img, .icono-b img,.icono-c img{
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 40%;
+    mix-blend-mode: multiply;
+}
