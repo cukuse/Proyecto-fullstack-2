@@ -1,17 +1,116 @@
-*{
-    background-color: #1a2b3c;
+* {
+    box-sizing: border-box; /* Previene que el padding deforme el ancho de los inputs */
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.icono-login{
-    width: 30%;
-    height: 40%;
-    mix-blend-mode: multiply;
+/* El cuerpo de la página actúa como un lienzo completo */
+body {
+    background-color: #2a434d; /* Fondo azul oscuro continuo, sin cortes */
+    height: 100vh; /* Viewport Height: Obliga a que la pantalla mida exactamente el 100% del alto del monitor/celular visible */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* TRUCO PRO: Centra todo el bloque (header, main, footer) perfectamente al medio vertical de la pantalla */
+    align-items: center; /* Centra todo perfectamente al medio horizontal */
+    padding: 20px; /* Evita que en celulares pequeños el contenido toque los bordes físicos de la pantalla */
 }
 
-.icono-login img{
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 40%;
-    justify-content: 
+/* Limitador de ancho para crear un efecto "App" o "Tarjeta" */
+header, main, footer {
+    width: 100%;
+    max-width: 450px; /* Impide que el formulario de login se estire a lo ancho en pantallas de computador grandes, manteniéndolo como una columna central elegante */
+}
+
+/* Contenedor del logo superior */
+.cabecilla-login {
+    display: flex;
+    justify-content: center; /* Centra el logo horizontalmente */
+    margin-bottom: 40px; /* Da un buen espacio de respiro antes de que empiece el formulario */
+}
+
+.icono-login img {
+    width: 80px; 
+    height: auto; /* Mantiene la proporción original del logo para que no se deforme */
+}
+
+/* El formulario en sí */
+.login-from {
+    display: flex;
+    flex-direction: column; /* Apila los inputs uno sobre otro */
+    gap: 20px; /* Crea una separación perfecta de 20px entre cada campo de texto y el botón, sin usar margin-bottom */
+}
+
+/* Cajas de texto (Inputs) */
+.box {
+    background-color: #ced4d6; /* Un gris claro que contrasta excelente con el azul oscuro de fondo */
+    border: none; /* Quitamos el borde nativo del navegador */
+    padding: 16px; /* Hacemos la caja más "gorda" y fácil de tocar con el dedo en móviles */
+    font-size: 16px; /* 16px es el tamaño mínimo recomendado para que los celulares (especialmente iOS) no hagan zoom automático al escribir */
+    color: #000;
+    width: 100%;
+    outline: none; /* Quita el recuadro azul brillante que sale por defecto cuando haces clic para escribir */
+    border-radius: 3px; /* Suaviza apenitas las esquinas */
+}
+
+/* El texto de ejemplo que va dentro del input antes de escribir */
+.box::placeholder {
+    color: #333; /* Gris oscuro para que sea legible pero no se confunda con texto real */
+}
+
+/* Botón principal de "Iniciar Sesión" */
+#btn-usuario {
+    background-color: #d9745f; /* Color coral de acción */
+    color: white;
+    border: none;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 3px;
+}
+
+/* Enlace de recuperación de contraseña */
+.l-contraseña {
+    color: white;
+    text-decoration: none; /* Le quita la línea inferior al link */
+    font-size: 15px;
+    text-align: center;
+    display: block; /* Obliga al enlace a comportarse como un bloque propio, ocupando toda su línea, para facilitar el centrado */
+    margin-top: 10px;
+}
+
+/* Separador para el botón de "Crear Cuenta" */
+footer {
+    margin-top: 60px; /* Aleja el botón de crear cuenta del formulario principal para que el usuario no se confunda de acción */
+}
+
+/* Botón secundario inferior */
+.btn-crear-cuenta {
+    background-color: #d9745f;
+    color: white;
+    border: none;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 3px;
+}
+
+/* Estilos para los mensajes de error personalizados inyectados por JS */
+.mensaje-error {
+    color: #ff6b6b; /* Un rojo claro que resalte sobre el fondo azul oscuro */
+    font-size: 13px;
+    margin-top: -15px; /* Lo sube un poquito para pegarlo a la caja de texto */
+    display: none; /* Por defecto está invisible, JS lo hará aparecer */
+    font-weight: bold;
+}
+
+/* JS le pondrá esta clase a la caja de texto si hay un error para pintar el borde rojo */
+.input-error {
+    border: 2px solid #ff6b6b !important;
+    background-color: #ffd6d6 !important; /* Un fondo rojizo muy suave */
 }

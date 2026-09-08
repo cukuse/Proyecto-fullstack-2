@@ -1,0 +1,96 @@
+/* Reset global de márgenes para evitar espacios en blanco no deseados del navegador */
+* {
+    box-sizing: border-box; /* Crucial: Evita que el padding sume tamaño extra a las cajas y rompa el diseño */
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* Fondo especial para la vista del menú */
+body {
+    background-color: #2a434d; /* Azul oscuro corporativo, diferente al fondo crema del resto del sitio */
+    min-height: 100vh; /* Obliga al cuerpo a medir al menos el 100% de la altura de la pantalla (Viewport Height) */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* Cabecera del menú con el logo y la flecha de volver */
+header {
+    display: flex;
+    justify-content: space-between; /* Empuja el logo a la izquierda y la flecha a la derecha automáticamente */
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+header > div:first-child img {
+    width: 60px; 
+}
+
+header > div:last-child img {
+    width: 70px; 
+    cursor: pointer; /* Cambia el cursor a una mano para indicar que la flecha es clickeable */
+}
+
+/* Contenedor central de los botones del menú */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px; 
+    width: 100%;
+}
+
+/* Estructura de cada "botón" del menú */
+main > div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinea el texto y el icono hacia la izquierda dentro de su caja */
+    width: 100%;
+    max-width: 300px; 
+    padding: 12px 25px;
+    
+    /* TRUCO VISUAL: Los paréntesis del menú */
+    border: 1px solid transparent; /* Borde base invisible */
+    border-left: 2px solid white; /* Solo pinto la línea izquierda */
+    border-right: 2px solid white; /* Solo pinto la línea derecha */
+    border-radius: 25px; /* Curvo las esquinas para dar el efecto de óvalo abierto */
+}
+
+/* Selecciona específicamente el TERCER botón del menú (Catálogo de eventos) */
+main > div:nth-child(3) {
+    position: relative; /* Lo marco como relativo para poder anclarle la línea divisoria abajo */
+    margin-bottom: 20px; 
+}
+
+/* Pseudo-elemento: Dibuja una línea separadora sin necesidad de ensuciar el HTML con una etiqueta <hr> */
+main > div:nth-child(3)::after {
+    content: ""; /* Obligatorio para que el pseudo-elemento exista */
+    position: absolute;
+    bottom: -15px; /* Lo empujo 15px por debajo del botón */
+    left: 15%; 
+    width: 70%; /* La línea solo ocupa el 70% del ancho para no tocar los bordes */
+    height: 1px;
+    background-color: white;
+}
+
+/* Iconos dentro de los botones */
+.iconos {
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.iconos img {
+    width: 100%;
+    max-width: 22px;
+    height: auto;
+}
+
+main a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    letter-spacing: 0.5px; /* Separa un poco las letras para que sea más elegante y legible */
+}

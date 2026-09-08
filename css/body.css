@@ -1,7 +1,8 @@
+/* Reseteo universal: Elimina los espacios "basura" que el navegador le pone por defecto a la página */
 *{
     margin: 0;
     padding: 0;
-    box-sizing: border-box
+    box-sizing: border-box /* Súper importante: Asegura que si le pongo un padding a una caja, esta no se vuelva más ancha y rompa mi diseño */
 }
 
 body{
@@ -11,6 +12,7 @@ body{
     line-height: 1.5;
 }
 
+/* Limpieza visual de los hipervínculos */
 a {
-    text-decoration: none;
+    text-decoration: none; /* Le quita el subrayado feo que traen los enlaces por defecto */
 }

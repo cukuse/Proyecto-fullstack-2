@@ -1,31 +1,39 @@
+/* Contenedor de la barra de navegación que lleva el lema y el botón del menú */
 nav {
     display: flex;
-    align-items: center;      
-    justify-content: center;  
-    position: relative;       
-    background-color: #e6e1d8;
-    padding: 15px 30px;       
+    align-items: center; /* Centra los elementos verticalmente en la barra */
+    justify-content: center; /* Centra el lema principal horizontalmente en el medio de la pantalla */
+    position: relative; /* CLAVE: Sirve como "ancla" para que el botón de hamburguesa se posicione de forma absoluta dentro de esta barra y no se escape a otro lado */
+    background-color: #e6e1d8; /* Un tono crema ligeramente más oscuro para diferenciarlo del cuerpo principal */
+    padding: 15px 30px; 
 }
 
-.menu-icon {
-    position: absolute;       
-    left: 30px;               
-    width: 35px;              
-    cursor: pointer;
+/* Contenedor del botón hamburguesa */
+#btn-abrir-menu {
+    position: absolute; /* Lo saca del flujo normal (no empuja al texto central) y lo ubica en coordenadas exactas */
+    object-fit: cover;
+    left: 30px; /* Lo pega exactamente a 30 píxeles del borde izquierdo de la barra 'nav' */
+    width: 35px;
+    cursor: pointer; /* Cambia la flechita del mouse por la "manita" para indicar interactividad */
+    transition: all 0.3s ease;
 }
 
-.menu-icon img {
-    width: 100%;              
+/* La imagen dentro del botón hamburguesa */
+#btn-abrir-menu img {
+    width: 100%; /* Ocupa el 100% de los 35px a su contenedor padre */
     display: block;  
-    transition: transform 0.2s ease-in-out;         
+    transition: transform 0.2s ease-in-out; /* Animación corta de 0.2s que acelera y desacelera suavemente */
+    mix-blend-mode: multiply; /* Vuelve transparente el fondo blanco original del icono .png */
 }
 
-.menu-icon img:hover {
-    transform: scale(1.1); 
+/* Efecto hover al pasar el ratón */
+#btn-abrir-menu img:hover {
+    transform: scale(1.1); /* Crece un 10% (1.1x) dando un efecto visual de que el botón "salta" hacia el usuario */
 }
 
+/* "Celebra tus fechas especiales..." */
 .sub-nav {
-    font-size: 1.1rem;        
-    color: #1b2a38;
-    margin: 0;               
+    font-size: 1.1rem; 
+    color: #1b2a38; 
+    margin: 0; /* Limpia cualquier margen automático del navegador para que quede perfectamente centrado */
 }
