@@ -135,3 +135,22 @@
     width: 20px;
     mix-blend-mode: multiply;
 }
+
+.mensaje-error {
+    display: none; /* Oculto por defecto, el JS lo mostrará */
+    color: #d17a6c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.input-error {
+    border: 2px solid #d17a6c; /* Pinta el borde de la caja de rojo si hay error */
+    background-color: #fcece9; /* Un fondo rojizo muy claro de advertencia */
+}
+
+/* Obliga al ícono del calendario nativo a verse de color blanco */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
