@@ -30,12 +30,12 @@
 #btn-agregar-evento {
     position: relative;
     z-index: 2; /* Nivel 2: Asegura que el botón quede por encima de la imagen de fondo (z-index 1) para que se pueda hacer clic */
-    background-color: rgb(208, 122, 0.85); /* Uso RGB para darle color coral pero con un 85% de opacidad (un poco transparente) */
+    background-color: tomato; /* Uso RGB para darle color coral pero con un 85% de opacidad (un poco transparente) */
     color: #1b2a38;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 1.6rem; /* Letra grande para llamar la atención del usuario */
     font-weight: bold;
-    padding: 15px 40px;
+    padding: 15px 39px;
     border: none; /* Le quito el borde feo que traen los botones HTML por defecto */
     border-radius: 40px; /* Bordes redondeados en forma de pastilla */
     cursor: pointer;
