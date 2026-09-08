@@ -1,70 +1,122 @@
-// ==========================================
-// VALIDACIÓN DEL FORMULARIO DE LOGIN
-// ==========================================
-
-// document.addEventListener asegura que el código de JS no se ejecute 
-// hasta que todo el HTML visual esté completamente cargado en la pantalla.
 document.addEventListener('DOMContentLoaded', function() {
 
-    // 1. SELECCIONAR: Atrapamos el formulario y los elementos usando su ID
-    const formularioLogin = document.getElementById('form-login');
-    const inputEmail = document.getElementById('usuario-email');
-    const inputPass = document.getElementById('usuario-pass');
-    
-    // Atrapamos los párrafos vacíos donde meteremos el texto de error
-    const errorEmail = document.getElementById('error-email');
-    const errorPass = document.getElementById('error-pass');
+    // ==========================================
+    // 1. VALIDACIÓN: LOGIN
+    // ==========================================
+    const formLogin = document.getElementById('form-login');
+    if (formLogin) { // Solo se ejecuta si estamos en login.html
+        formLogin.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
 
-    // 2. ESCUCHAR: Le decimos al formulario que escuche el evento 'submit' (cuando presionan el botón)
-    formularioLogin.addEventListener('submit', function(evento) {
-        
-        // ¡CRÍTICO! evento.preventDefault() frena que la página se recargue automáticamente.
-        // Nos da tiempo para revisar los datos antes de enviarlos.
-        evento.preventDefault();
+            const email = document.getElementById('usuario-email');
+            const pass = document.getElementById('usuario-pass');
+            const errEmail = document.getElementById('error-email');
+            const errPass = document.getElementById('error-pass');
 
-        // Creamos una variable para saber si el formulario pasó la prueba (true) o falló (false)
-        let formularioValido = true;
+            // Limpiar errores
+            email.classList.remove('input-error'); errEmail.style.display = 'none';
+            pass.classList.remove('input-error'); errPass.style.display = 'none';
 
-        // Limpiamos errores previos por si el usuario está intentando de nuevo
-        inputEmail.classList.remove('input-error');
-        errorEmail.style.display = 'none';
-        
-        inputPass.classList.remove('input-error');
-        errorPass.style.display = 'none';
+            if (email.value.trim() === '') {
+                errEmail.textContent = 'Sugerencia: Ingresa tu correo o usuario.';
+                errEmail.style.display = 'block';
+                email.classList.add('input-error');
+                valido = false;
+            }
 
-        // 3. REACCIONAR Y VALIDAR: 
-        
-        // REGLA 1: El correo no puede estar vacío
-        // .value extrae lo que escribió el usuario. .trim() le corta los espacios en blanco a los lados.
-        if (inputEmail.value.trim() === '') {
-            errorEmail.textContent = 'Sugerencia: El correo o usuario no puede estar vacío.';
-            errorEmail.style.display = 'block'; // Lo hacemos visible
-            inputEmail.classList.add('input-error'); // Pintamos la caja de rojo
-            formularioValido = false; // Reprobó la prueba
-        }
+            if (pass.value.trim().length < 6) {
+                errPass.textContent = 'Sugerencia: La contraseña debe tener al menos 6 caracteres.';
+                errPass.style.display = 'block';
+                pass.classList.add('input-error');
+                valido = false;
+            }
 
-        // REGLA 2: La contraseña debe tener al menos 6 caracteres
-        if (inputPass.value.trim() === '') {
-            errorPass.textContent = 'Error: Por favor, ingresa tu contraseña.';
-            errorPass.style.display = 'block';
-            inputPass.classList.add('input-error');
-            formularioValido = false;
-        } else if (inputPass.value.length < 6) {
-            errorPass.textContent = 'Sugerencia: La contraseña debe tener al menos 6 caracteres por seguridad.';
-            errorPass.style.display = 'block';
-            inputPass.classList.add('input-error');
-            formularioValido = false;
-        }
+            if (valido) {
+                alert('¡Iniciando sesión!');
+                window.location.href = 'index.html'; 
+            }
+        });
+    }
 
-        // 4. VEREDICTO FINAL
-        if (formularioValido) {
-            // Si todo está bien, simulamos que entra. 
-            // En la vida real aquí haríamos un fetch() hacia tu backend.
-            alert('¡Inicio de sesión exitoso! Redirigiendo...');
-            
-            // Te redirige a la página principal temporalmente
-            window.location.href = 'index.html'; 
-        }
-    });
+    // ==========================================
+    // 2. VALIDACIÓN: CONTACTO
+    // ==========================================
+    const formContacto = document.getElementById('form-contacto');
+    if (formContacto) { // Solo se ejecuta si estamos en contacto.html
+        formContacto.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
 
+            const nombre = document.getElementById('contacto-nombre');
+            const mensaje = document.getElementById('contacto-mensaje');
+            const errNombre = document.getElementById('error-nombre');
+            const errMensaje = document.getElementById('error-mensaje');
+
+            nombre.classList.remove('input-error'); errNombre.style.display = 'none';
+            mensaje.classList.remove('input-error'); errMensaje.style.display = 'none';
+
+            // Validar que el nombre solo tenga letras y espacios (Expresión Regular básica)
+            const regexLetras = /^[a-zA-Z\s]+$/;
+            if (!regexLetras.test(nombre.value.trim())) {
+                errNombre.textContent = 'Error: El nombre solo debe contener letras.';
+                errNombre.style.display = 'block';
+                nombre.classList.add('input-error');
+                valido = false;
+            }
+
+            if (mensaje.value.trim().length < 10) {
+                errMensaje.textContent = 'Sugerencia: Por favor, explícanos con más detalle (mínimo 10 caracteres).';
+                errMensaje.style.display = 'block';
+                mensaje.classList.add('input-error');
+                valido = false;
+            }
+
+            if (valido) {
+                alert('¡Mensaje enviado exitosamente!');
+                formContacto.reset(); // Limpia el formulario
+            }
+        });
+    }
+
+    // ==========================================
+    // 3. VALIDACIÓN: AGENDAR EVENTO
+    // ==========================================
+    const formEvento = document.getElementById('form-evento');
+    if (formEvento) { // Solo se ejecuta si estamos en evento.html
+        formEvento.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
+
+            const invitados = document.getElementById('evento-invitados');
+            const telefono = document.getElementById('evento-telefono');
+            const errInvitados = document.getElementById('error-invitados');
+            const errTelefono = document.getElementById('error-telefono');
+
+            invitados.classList.remove('input-error'); errInvitados.style.display = 'none';
+            telefono.classList.remove('input-error'); errTelefono.style.display = 'none';
+
+            // Validar que invitados sea un número mayor a 0
+            if (isNaN(invitados.value) || invitados.value <= 0) {
+                errInvitados.textContent = 'Error: Ingresa una cantidad válida de invitados.';
+                errInvitados.style.display = 'block';
+                invitados.classList.add('input-error');
+                valido = false;
+            }
+
+            // Validar teléfono chileno (+56 9 seguido de 8 números)
+            const regexTelefono = /^\+56\s9\s\d{4}\s\d{4}$/;
+            if (!regexTelefono.test(telefono.value.trim())) {
+                errTelefono.textContent = 'Sugerencia: Usa el formato +56 9 XXXX XXXX';
+                errTelefono.style.display = 'block';
+                telefono.classList.add('input-error');
+                valido = false;
+            }
+
+            if (valido) {
+                alert('¡Evento agendado con éxito!');
+                formEvento.reset();
+            }
+        });
+    }
 });
