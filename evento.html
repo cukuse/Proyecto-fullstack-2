@@ -23,61 +23,74 @@
             <h2>agendar tu evento :D</h2>
         </div>
 
-        <div class="contenedor-formulario">
-            <!-- Columna Izquierda -->
-            <div class="columna-izq">
-                <div class="caja-calendario">
-                    <!-- IMAGEN LIBRE 1: Aquí debes poner un recorte o captura del calendario cuadrado de la foto -->
-                    <img src="img/calendario.png" alt="Calendario Septiembre 2026">
+        <!-- INTEGRACIÓN JS: Envolvemos toda la zona interactiva en un formulario con ID para atraparlo con JavaScript -->
+        <form id="form-evento">
+            <div class="contenedor-formulario">
+                <!-- Columna Izquierda -->
+                <div class="columna-izq">
+                    <div class="caja-calendario">
+                        <!-- IMAGEN LIBRE 1: Aquí debes poner un recorte o captura del calendario cuadrado de la foto -->
+                        <img src="img/calendario.png" alt="Calendario Septiembre 2026">
+                    </div>
+                    
+                    <div class="grupo-input">
+                        <label>mensaje para los invitados:</label>
+                        <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
+                    </div>
                 </div>
-                
-                <div class="grupo-input">
-                    <label>mensaje para los invitados:</label>
+
+                <!-- Columna Derecha -->
+                <div class="columna-der">
+                    <div class="grupo-input">
+                        <label>fecha del evento</label>
+                        <input type="text" placeholder="xx/xx/xxxx">
+                    </div>
+                    
+                    <!-- CAMBIO JS: Agregamos id="evento-invitados" y el párrafo de error -->
+                    <div class="grupo-input">
+                        <label>*cantidad de invitados</label>
+                        <input type="number" id="evento-invitados" placeholder="Ej: 50">
+                        <p class="mensaje-error" id="error-invitados"></p>
+                    </div>
+                    
+                    <div class="grupo-input">
+                        <label>*nombre invitado/a</label>
+                        <input type="text" placeholder="xxxxxx">
+                    </div>
+                    <div class="grupo-input">
+                        <label>*correo del invitado</label>
+                        <input type="email" placeholder="xxxxxx">
+                    </div>
+                    
+                    <!-- CAMBIO JS: Agregamos id="evento-telefono" y el párrafo de error -->
+                    <div class="grupo-input">
+                        <label>*numero del invitado</label>
+                        <input type="tel" id="evento-telefono" placeholder="+56 9 **** ****">
+                        <p class="mensaje-error" id="error-telefono"></p>
+                    </div>
+                    
+                    <!-- IMPORTANTE: type="button" evita que este botón envíe el formulario por accidente -->
+                    <button type="button" class="btn-agregar-inv">Agregar invitado</button>
+                </div>
+            </div>
+
+            <!-- Sección Inferior -->
+            <div class="seccion-inferior">
+                <div class="grupo-input ancho-completo">
+                    <label>comentarios o grandes rasgos del evento</label>
                     <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
                 </div>
-            </div>
 
-            <!-- Columna Derecha -->
-            <div class="columna-der">
-                <div class="grupo-input">
-                    <label>*calle o locacion</label>
-                    <input type="text" placeholder="xx/xx/xxxx">
+                <div class="grupo-checkbox">
+                    <div class="check-circulo"></div>
+                    <label>Terminos y condiciones</label>
+                    <img src="img/terminos-condiciones.png" alt="Descargar" class="icono-descarga">
                 </div>
-                <div class="grupo-input">
-                    <label>*cantidad de invitados</label>
-                    <input type="text" placeholder="xxxxxx">
-                </div>
-                <div class="grupo-input">
-                    <label>*nombre cumpleañero/a</label>
-                    <input type="text" placeholder="xxxxxx">
-                </div>
-                <div class="grupo-input">
-                    <label>*correo del invitado</label>
-                    <input type="email" placeholder="xxxxxx">
-                </div>
-                <div class="grupo-input">
-                    <label>*numero del invitado</label>
-                    <input type="tel" placeholder="+56 9 **** ****">
-                </div>
-                <button class="btn-agregar-inv">Agregar invitado</button>
-            </div>
-        </div>
 
-        <!-- Sección Inferior -->
-        <div class="seccion-inferior">
-            <div class="grupo-input ancho-completo">
-                <label>comentarios o grandes rasgos del evento</label>
-                <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
+                <!-- IMPORTANTE: type="submit" gatilla la validación del JavaScript -->
+                <button type="submit" class="btn-agendar-final">Agendar Evento</button>
             </div>
-
-            <div class="grupo-checkbox">
-                <div class="check-circulo"></div>
-                <label>coordinar y analizar mas para agendar tu dia especial</label>
-                <img src="img/terminos-condiciones.png" alt="Descargar" class="icono-descarga">
-            </div>
-
-            <button class="btn-agendar-final">Agendar Evento</button>
-        </div>
+        </form>
     </main>
 
     <!-- Footer idéntico a tu index.html -->
@@ -92,5 +105,8 @@
             <p>Botón de arrepentimiento</p>
         </div>
     </footer>
+
+    <!-- CONEXIÓN AL CEREBRO JS: Llama al archivo de validaciones al final para que lea la página una vez cargada -->
+    <script src="jss/validaciones.js"></script>
 </body>
 </html>

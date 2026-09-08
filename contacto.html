@@ -18,10 +18,11 @@
         <h2 class="titulo-seccion">Envíanos un Mensaje</h2>
         <p class="subtitulo-seccion">¿Tienes dudas sobre un evento? Escríbenos.</p>
         
-        <form class="caja-formulario" action="#" method="POST">
+        <form class="caja-formulario" action="#" method="POST" id="form-contacto">
             <div class="grupo-input">
                 <label>Nombre Completo</label>
-                <input type="text" placeholder="Ej: Juan Pérez" required>
+                <input id="contacto-nombre"  type="text" placeholder="Ej: Juan Pérez" required>
+                <p class="mensaje-error" id="error-nombre"></p>
             </div>
             <div class="grupo-input">
                 <label>Correo Electrónico</label>
@@ -37,7 +38,8 @@
             </div>
             <div class="grupo-input">
                 <label>Mensaje</label>
-                <textarea rows="4" placeholder="Escribe tu consulta aquí..." required></textarea>
+                <textarea id="contacto-mensaje" rows="4" placeholder="Escribe tu consulta aquí..." required></textarea>
+                <p class="mensaje-error" id="error-mensaje"></p>
             </div>
             <button type="submit" class="btn-accion">Enviar Mensaje</button>
         </form>
