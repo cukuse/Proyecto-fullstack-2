@@ -1,0 +1,1806 @@
+=== INICIO ARCHIVO: catalogo.css ===
+/* css/catalogo.css */
+.main-catalogo {
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.barra-filtros {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: #e6e1d8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.input-buscar {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-filtro {
+    background-color: #2a434d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.grilla-catalogo {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tarjeta-evento {
+    background-color: white;
+    border: 2px solid #2a434d;
+    border-radius: 8px;
+    width: 250px;
+    padding: 15px;
+    text-align: left;
+}
+
+.imagen-placeholder {
+    width: 100%;
+    height: 150px;
+    background-color: #ced4d6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    color: #555;
+}
+
+.tarjeta-evento h3 {
+    color: #d9745f;
+    margin-bottom: 5px;
+}
+=== FIN ARCHIVO: catalogo.css ===
+
+=== INICIO ARCHIVO: catalogo.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Tu Día Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/catalogo.css">
+</head>
+<body>
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
+    </header>
+
+    <main class="main-catalogo">
+        <h2 class="titulo-seccion">Nuestros Eventos</h2>
+        
+        <!-- Formulario de filtro -->
+        <form class="barra-filtros">
+            <input type="text" placeholder="Buscar evento..." class="input-buscar">
+            <label><input type="checkbox"> Matrimonios</label>
+            <label><input type="checkbox"> Cumpleaños</label>
+            <button type="button" class="btn-filtro">Filtrar</button>
+        </form>
+
+        <div class="grilla-catalogo">
+            <!-- Tarjeta 1 -->
+            <div class="tarjeta-evento">
+                <div class="imagen-placeholder">IMG</div>
+                <h3>Boda al aire libre</h3>
+                <p>Aforo: 50 personas</p>
+            </div>
+            <!-- Tarjeta 2 -->
+            <div class="tarjeta-evento">
+                <div class="imagen-placeholder">IMG</div>
+                <h3>Cumpleaños Temático</h3>
+                <p>Aforo: 30 personas</p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: catalogo.html ===
+
+=== INICIO ARCHIVO: contacto.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos - Tu Día Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/formularios-extra.css">
+</head>
+<body>
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
+    </header>
+    
+    <main class="main-centrado">
+        <h2 class="titulo-seccion">Envíanos un Mensaje</h2>
+        <p class="subtitulo-seccion">¿Tienes dudas sobre un evento? Escríbenos.</p>
+        
+        <form class="caja-formulario" action="#" method="POST">
+            <div class="grupo-input">
+                <label>Nombre Completo</label>
+                <input type="text" placeholder="Ej: Juan Pérez" required>
+            </div>
+            <div class="grupo-input">
+                <label>Correo Electrónico</label>
+                <input type="email" placeholder="tu@correo.com" required>
+            </div>
+            <div class="grupo-input">
+                <label>Asunto</label>
+                <select class="input-select">
+                    <option>Cotización</option>
+                    <option>Reclamo</option>
+                    <option>Trabaja con nosotros</option>
+                </select>
+            </div>
+            <div class="grupo-input">
+                <label>Mensaje</label>
+                <textarea rows="4" placeholder="Escribe tu consulta aquí..." required></textarea>
+            </div>
+            <button type="submit" class="btn-accion">Enviar Mensaje</button>
+        </form>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: contacto.html ===
+
+=== INICIO ARCHIVO: evento.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Evento - Tu Día Especial</title>
+    <!-- Reutilizamos tu estilo base y agregamos el específico de esta vista -->
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/evento.css">
+</head>
+<body>
+    <!-- Cabecera idéntica a tu index.html -->
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
+    </header>
+
+    <main class="main-evento">
+        <!-- Submenú -->
+        <div class="cabecera-evento">
+            <a href="menu.html"><img src="img/ambulgel-menu.png" alt="Menú" class="icono-menu"></a>
+            <h2>agendar tu evento :D</h2>
+        </div>
+
+        <div class="contenedor-formulario">
+            <!-- Columna Izquierda -->
+            <div class="columna-izq">
+                <div class="caja-calendario">
+                    <!-- IMAGEN LIBRE 1: Aquí debes poner un recorte o captura del calendario cuadrado de la foto -->
+                    <img src="img/calendario.png" alt="Calendario Septiembre 2026">
+                </div>
+                
+                <div class="grupo-input">
+                    <label>mensaje para los invitados:</label>
+                    <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="columna-der">
+                <div class="grupo-input">
+                    <label>*calle o locacion</label>
+                    <input type="text" placeholder="xx/xx/xxxx">
+                </div>
+                <div class="grupo-input">
+                    <label>*cantidad de invitados</label>
+                    <input type="text" placeholder="xxxxxx">
+                </div>
+                <div class="grupo-input">
+                    <label>*nombre cumpleañero/a</label>
+                    <input type="text" placeholder="xxxxxx">
+                </div>
+                <div class="grupo-input">
+                    <label>*correo del invitado</label>
+                    <input type="email" placeholder="xxxxxx">
+                </div>
+                <div class="grupo-input">
+                    <label>*numero del invitado</label>
+                    <input type="tel" placeholder="+56 9 **** ****">
+                </div>
+                <button class="btn-agregar-inv">Agregar invitado</button>
+            </div>
+        </div>
+
+        <!-- Sección Inferior -->
+        <div class="seccion-inferior">
+            <div class="grupo-input ancho-completo">
+                <label>comentarios o grandes rasgos del evento</label>
+                <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
+            </div>
+
+            <div class="grupo-checkbox">
+                <div class="check-circulo"></div>
+                <label>coordinar y analizar mas para agendar tu dia especial</label>
+                <img src="img/terminos-condiciones.png" alt="Descargar" class="icono-descarga">
+            </div>
+
+            <button class="btn-agendar-final">Agendar Evento</button>
+        </div>
+    </main>
+
+    <!-- Footer idéntico a tu index.html -->
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: evento.html ===
+
+=== INICIO ARCHIVO: index.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu dia Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">    
+</head>
+<body>
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt=""></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt=""></a> </div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt=""></a></div>
+    </header>
+    <nav>
+        <div id="btn-abrir-menu"><a href="menu.html"><img src="img/ambulgel-menu.png" alt=""></a></div>
+        
+        <p class="sub-nav"><strong>Celebra tus fechas especiales en formato Especial</strong></p>
+    </nav>
+    <main>
+        <section class="agrevento-sect">
+            <div class="imagen-inicio"><img src="img/home 1.jpg" alt=""></div>
+            <button id="btn-agregar-evento" onclick="Animation"> Agregar Evento</button>
+        </section>
+        <section class="features">
+            <div>
+                <div class="icono-a"><img src="img/icono-a.png" alt=""></div>
+                <p><strong>Aforos Pequeños</strong> Eventos Privados y Calidos</p>
+            </div>
+            <div>
+                <div class="icono-b"><img src="img/icono-b.png" alt=""></div>
+                <p><strong>Planificacion Segura</strong> Agendamiento anticipado Garantizado</p>
+            </div>
+            <div>
+                <div class="icono-c"><img src="img/icono-c.png" alt=""></div>
+                <p><Strong class="sub-1">Detalles Unicos</Strong> Personaliza Tu pedido Con Extras y Envios Especiales</p>
+            </div>  
+        </section>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="https://www.instagram.com/smookekl.dlfr/"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+    
+</html>
+=== FIN ARCHIVO: index.html ===
+
+=== INICIO ARCHIVO: login.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login :D</title>
+    <link rel="stylesheet" href="css/estilo-login.css">
+</head>
+<body>
+    <header class="cabecilla-login">
+        <div class="icono-login"><a href="index.html"><img src="img/icono-login.svg" alt="Logotipo del sitio"></a></div>
+        
+    </header>
+    <main>
+        <section>
+            <div>
+                <form class="login-from">
+                    <input type="text" class="box" placeholder="Correo o Nombre De Usuario">
+                    <input type="password" class="box" placeholder="Contraseña">
+                    <div><button id="btn-usuario">Iniciar Sesion</button></div>
+                    <a href="" class="l-contraseña">¿Olvidaste Tu Contraseña?</a>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div>
+            <section><button class="btn-crear-cuenta" onclick="">Crear Cuenta Nueva</button></section>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: login.html ===
+
+=== INICIO ARCHIVO: menu.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu ambulgel</title>
+    <link rel="stylesheet" href="css/estilo_menu.css">
+</head>
+<body>
+    <header>
+        <div><img src="img/icono-login.svg" alt="Icono De La Empresa"></div>
+        <div><a href="index.html"><img src="img/menu-flecha.png" alt=""></a></div>
+    </header>
+    <main>
+        <div>
+            <div class="iconos"><img src="img/menu-home.png" alt="incio"></div>
+            <a href="index.html">Inicio</a>
+        </div>
+        <div>
+            <div class="iconos"><img src="img/menu-agendar.png" alt="Eventos"></div>
+            <a href="evento.html">Agendar Evento</a>
+        </div>
+        <div>
+            <div class="iconos" ><img src="img/menu-catalago.png" alt="Catalogo"></div>
+            <a href="catalogo.html">Catalago De Eventos</a>
+        </div>
+        <div>
+            <div class="iconos"><img src="img/icono-usuario.png" alt="Perfil"></div>
+            <a href="perfil.html">Mi Perfil</a>
+        </div>
+        <div>
+            <div class="iconos"><img src="img/home-contacto.png" alt="Contacto"></div>
+            <a href="contacto.html">Contactanos</a>
+        </div>
+        <div>
+            <div class="iconos"><img src="img/menu-quienesSomos.png" alt=""></div>
+            <a href="nosotros.html">¿Quienes Somos?</a>
+        </div>
+    </main>
+    <footer></footer>
+    
+</body>
+</html>
+=== FIN ARCHIVO: menu.html ===
+
+=== INICIO ARCHIVO: nosotros.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - Tu Día Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/formularios-extra.css">
+</head>
+<body>
+    <!-- Pega aquí tu <header> y <nav> de siempre -->
+
+    <main class="main-centrado">
+        <h2 class="titulo-seccion">¿Quiénes Somos?</h2>
+        <div class="texto-nosotros">
+            <p>Somos una empresa enfocada en generar eventos cálidos e inolvidables. Nos especializamos en aforos pequeños para mantener la magia y exclusividad de tu día especial.</p>
+        </div>
+
+        <!-- Formulario Newsletter -->
+        <form class="caja-formulario form-newsletter">
+            <h3>Suscríbete para ofertas</h3>
+            <div class="grupo-input">
+                <input type="email" placeholder="Ingresa tu correo" required>
+            </div>
+            <button type="submit" class="btn-accion">Suscribirme</button>
+        </form>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: nosotros.html ===
+
+=== INICIO ARCHIVO: perfil.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Tu Día Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/formularios-extra.css">
+</head>
+<body>
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
+    </header>
+
+    <main class="main-centrado">
+        <div class="avatar-perfil">
+            <img src="img/icono-usuario.png" alt="Mi Perfil">
+        </div>
+        <h2 class="titulo-seccion">Mis Datos Personales</h2>
+        
+        <form class="caja-formulario" action="#" method="POST">
+            <div class="grupo-input">
+                <label>Cambiar Nombre de Usuario</label>
+                <input type="text" value="Usuario123">
+            </div>
+            <div class="grupo-input">
+                <label>Teléfono de Contacto</label>
+                <input type="tel" value="+56 9 1234 5678">
+            </div>
+            <div class="grupo-input">
+                <label>Nueva Contraseña</label>
+                <input type="password" placeholder="********">
+            </div>
+            <button type="submit" class="btn-accion">Guardar Cambios</button>
+        </form>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+    
+</body>
+</html>
+=== FIN ARCHIVO: perfil.html ===
+
+=== INICIO ARCHIVO: proyecto 1.txt ===
+=== INICIO ARCHIVO: catalogo.css ===
+/* css/catalogo.css */
+.main-catalogo {
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.barra-filtros {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: #e6e1d8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.input-buscar {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-filtro {
+    background-color: #2a434d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.grilla-catalogo {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tarjeta-evento {
+    background-color: white;
+    border: 2px solid #2a434d;
+    border-radius: 8px;
+    width: 250px;
+    padding: 15px;
+    text-align: left;
+}
+
+.imagen-placeholder {
+    width: 100%;
+    height: 150px;
+    background-color: #ced4d6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    color: #555;
+}
+
+.tarjeta-evento h3 {
+    color: #d9745f;
+    margin-bottom: 5px;
+}
+=== FIN ARCHIVO: catalogo.css ===
+
+=== INICIO ARCHIVO: catalogo.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Tu Día Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/catalogo.css">
+</head>
+<body>
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
+    </header>
+
+    <main class="main-catalogo">
+        <h2 class="titulo-seccion">Nuestros Eventos</h2>
+        
+        <!-- Formulario de filtro -->
+        <form class="barra-filtros">
+            <input type="text" placeholder="Buscar evento..." class="input-buscar">
+            <label><input type="checkbox"> Matrimonios</label>
+            <label><input type="checkbox"> Cumpleaños</label>
+            <button type="button" class="btn-filtro">Filtrar</button>
+        </form>
+
+        <div class="grilla-catalogo">
+            <!-- Tarjeta 1 -->
+            <div class="tarjeta-evento">
+                <div class="imagen-placeholder">IMG</div>
+                <h3>Boda al aire libre</h3>
+                <p>Aforo: 50 personas</p>
+            </div>
+            <!-- Tarjeta 2 -->
+            <div class="tarjeta-evento">
+                <div class="imagen-placeholder">IMG</div>
+                <h3>Cumpleaños Temático</h3>
+                <p>Aforo: 30 personas</p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: catalogo.html ===
+
+=== INICIO ARCHIVO: contacto.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos - Tu Día Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/formularios-extra.css">
+</head>
+<body>
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
+    </header>
+    
+    <main class="main-centrado">
+        <h2 class="titulo-seccion">Envíanos un Mensaje</h2>
+        <p class="subtitulo-seccion">¿Tienes dudas sobre un evento? Escríbenos.</p>
+        
+        <form class="caja-formulario" action="#" method="POST">
+            <div class="grupo-input">
+                <label>Nombre Completo</label>
+                <input type="text" placeholder="Ej: Juan Pérez" required>
+            </div>
+            <div class="grupo-input">
+                <label>Correo Electrónico</label>
+                <input type="email" placeholder="tu@correo.com" required>
+            </div>
+            <div class="grupo-input">
+                <label>Asunto</label>
+                <select class="input-select">
+                    <option>Cotización</option>
+                    <option>Reclamo</option>
+                    <option>Trabaja con nosotros</option>
+                </select>
+            </div>
+            <div class="grupo-input">
+                <label>Mensaje</label>
+                <textarea rows="4" placeholder="Escribe tu consulta aquí..." required></textarea>
+            </div>
+            <button type="submit" class="btn-accion">Enviar Mensaje</button>
+        </form>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: contacto.html ===
+
+=== INICIO ARCHIVO: evento.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Evento - Tu Día Especial</title>
+    <!-- Reutilizamos tu estilo base y agregamos el específico de esta vista -->
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/evento.css">
+</head>
+<body>
+    <!-- Cabecera idéntica a tu index.html -->
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
+    </header>
+
+    <main class="main-evento">
+        <!-- Submenú -->
+        <div class="cabecera-evento">
+            <a href="menu.html"><img src="img/ambulgel-menu.png" alt="Menú" class="icono-menu"></a>
+            <h2>agendar tu evento :D</h2>
+        </div>
+
+        <div class="contenedor-formulario">
+            <!-- Columna Izquierda -->
+            <div class="columna-izq">
+                <div class="caja-calendario">
+                    <!-- IMAGEN LIBRE 1: Aquí debes poner un recorte o captura del calendario cuadrado de la foto -->
+                    <img src="img/calendario.png" alt="Calendario Septiembre 2026">
+                </div>
+                
+                <div class="grupo-input">
+                    <label>mensaje para los invitados:</label>
+                    <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="columna-der">
+                <div class="grupo-input">
+                    <label>*calle o locacion</label>
+                    <input type="text" placeholder="xx/xx/xxxx">
+                </div>
+                <div class="grupo-input">
+                    <label>*cantidad de invitados</label>
+                    <input type="text" placeholder="xxxxxx">
+                </div>
+                <div class="grupo-input">
+                    <label>*nombre cumpleañero/a</label>
+                    <input type="text" placeholder="xxxxxx">
+                </div>
+                <div class="grupo-input">
+                    <label>*correo del invitado</label>
+                    <input type="email" placeholder="xxxxxx">
+                </div>
+                <div class="grupo-input">
+                    <label>*numero del invitado</label>
+                    <input type="tel" placeholder="+56 9 **** ****">
+                </div>
+                <button class="btn-agregar-inv">Agregar invitado</button>
+            </div>
+        </div>
+
+        <!-- Sección Inferior -->
+        <div class="seccion-inferior">
+            <div class="grupo-input ancho-completo">
+                <label>comentarios o grandes rasgos del evento</label>
+                <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
+            </div>
+
+            <div class="grupo-checkbox">
+                <div class="check-circulo"></div>
+                <label>coordinar y analizar mas para agendar tu dia especial</label>
+                <img src="img/terminos-condiciones.png" alt="Descargar" class="icono-descarga">
+            </div>
+
+            <button class="btn-agendar-final">Agendar Evento</button>
+        </div>
+    </main>
+
+    <!-- Footer idéntico a tu index.html -->
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: evento.html ===
+
+=== INICIO ARCHIVO: index.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu dia Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">    
+</head>
+<body>
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt=""></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt=""></a> </div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt=""></a></div>
+    </header>
+    <nav>
+        <div id="btn-abrir-menu"><a href="menu.html"><img src="img/ambulgel-menu.png" alt=""></a></div>
+        
+        <p class="sub-nav"><strong>Celebra tus fechas especiales en formato Especial</strong></p>
+    </nav>
+    <main>
+        <section class="agrevento-sect">
+            <div class="imagen-inicio"><img src="img/home 1.jpg" alt=""></div>
+            <button id="btn-agregar-evento" onclick="Animation"> Agregar Evento</button>
+        </section>
+        <section class="features">
+            <div>
+                <div class="icono-a"><img src="img/icono-a.png" alt=""></div>
+                <p><strong>Aforos Pequeños</strong> Eventos Privados y Calidos</p>
+            </div>
+            <div>
+                <div class="icono-b"><img src="img/icono-b.png" alt=""></div>
+                <p><strong>Planificacion Segura</strong> Agendamiento anticipado Garantizado</p>
+            </div>
+            <div>
+                <div class="icono-c"><img src="img/icono-c.png" alt=""></div>
+                <p><Strong class="sub-1">Detalles Unicos</Strong> Personaliza Tu pedido Con Extras y Envios Especiales</p>
+            </div>  
+        </section>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="https://www.instagram.com/smookekl.dlfr/"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+    
+</html>
+=== FIN ARCHIVO: index.html ===
+
+=== INICIO ARCHIVO: login.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login :D</title>
+    <link rel="stylesheet" href="css/estilo-login.css">
+</head>
+<body>
+    <header class="cabecilla-login">
+        <div class="icono-login"><a href="index.html"><img src="img/icono-login.svg" alt="Logotipo del sitio"></a></div>
+        
+    </header>
+    <main>
+        <section>
+            <div>
+                <form class="login-from">
+                    <input type="text" class="box" placeholder="Correo o Nombre De Usuario">
+                    <input type="password" class="box" placeholder="Contraseña">
+                    <div><button id="btn-usuario">Iniciar Sesion</button></div>
+                    <a href="" class="l-contraseña">¿Olvidaste Tu Contraseña?</a>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div>
+            <section><button class="btn-crear-cuenta" onclick="">Crear Cuenta Nueva</button></section>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: login.html ===
+
+=== INICIO ARCHIVO: menu.html ===
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu ambulgel</title>
+    <link rel="stylesheet" href="css/estilo_menu.css">
+</head>
+<body>
+    <header>
+        <div><img src="img/icono-login.svg" alt="Icono De La Empresa"></div>
+        <div><a href="index.html"><img src="img/menu-flecha.png" alt=""></a></div>
+    </header>
+    <main>
+        <div>
+            <div class="iconos"><img src="img/menu-home.png" alt="incio"></div>
+            <a href="index.html">Inicio</a>
+        </div>
+        <div>
+            <div class="iconos"><img src="img/menu-agendar.png" alt="Eventos"></div>
+            <a href="evento.html">Agendar Evento</a>
+        </div>
+        <div>
+            <div class="iconos" ><img src="img/menu-catalago.png" alt="Catalogo"></div>
+            <a href="catalogo.html">Catalago De Eventos</a>
+        </div>
+        <div>
+            <div class="iconos"><img src="img/icono-usuario.png" alt="Perfil"></div>
+            <a href="perfil.html">Mi Perfil</a>
+        </div>
+        <div>
+            <div class="iconos"><img src="img/home-contacto.png" alt="Contacto"></div>
+            <a href="contacto.html">Contactanos</a>
+        </div>
+        <div>
+            <div class="iconos"><img src="img/menu-quienesSomos.png" alt=""></div>
+            <a href="nosotros.html">¿Quienes Somos?</a>
+        </div>
+    </main>
+    <footer></footer>
+    
+</body>
+</html>
+=== FIN ARCHIVO: menu.html ===
+
+=== INICIO ARCHIVO: nosotros.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - Tu Día Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/formularios-extra.css">
+</head>
+<body>
+    <!-- Pega aquí tu <header> y <nav> de siempre -->
+
+    <main class="main-centrado">
+        <h2 class="titulo-seccion">¿Quiénes Somos?</h2>
+        <div class="texto-nosotros">
+            <p>Somos una empresa enfocada en generar eventos cálidos e inolvidables. Nos especializamos en aforos pequeños para mantener la magia y exclusividad de tu día especial.</p>
+        </div>
+
+        <!-- Formulario Newsletter -->
+        <form class="caja-formulario form-newsletter">
+            <h3>Suscríbete para ofertas</h3>
+            <div class="grupo-input">
+                <input type="email" placeholder="Ingresa tu correo" required>
+            </div>
+            <button type="submit" class="btn-accion">Suscribirme</button>
+        </form>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+</body>
+</html>
+=== FIN ARCHIVO: nosotros.html ===
+
+=== INICIO ARCHIVO: perfil.html ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Tu Día Especial</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/formularios-extra.css">
+</head>
+<body>
+    <header class="inicio-cabecilla">
+        <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
+        <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
+        <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
+    </header>
+
+    <main class="main-centrado">
+        <div class="avatar-perfil">
+            <img src="img/icono-usuario.png" alt="Mi Perfil">
+        </div>
+        <h2 class="titulo-seccion">Mis Datos Personales</h2>
+        
+        <form class="caja-formulario" action="#" method="POST">
+            <div class="grupo-input">
+                <label>Cambiar Nombre de Usuario</label>
+                <input type="text" value="Usuario123">
+            </div>
+            <div class="grupo-input">
+                <label>Teléfono de Contacto</label>
+                <input type="tel" value="+56 9 1234 5678">
+            </div>
+            <div class="grupo-input">
+                <label>Nueva Contraseña</label>
+                <input type="password" placeholder="********">
+            </div>
+            <button type="submit" class="btn-accion">Guardar Cambios</button>
+        </form>
+    </main>
+    <footer>
+        <div class="redes-sociales">
+            <a href="#"><p>📷 @diasespecial</p></a>
+            <p>📘 @diasespecial</p>
+        </div>
+        <div class="info-pag">
+            <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+            <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+            <p>Botón de arrepentimiento</p>
+        </div>
+    </footer>
+    
+</body>
+</html>
+=== FIN ARCHIVO: proyecto 1.txt ===
+
+=== INICIO ARCHIVO: README.md ===
+# Proyecto-fullstack-2
+
+empresa que genere eventos durante el año en base a fechas especiales para agendar 
+
+este proyecto se tendrá en consideración las fechas festivas sociales durante el año
+
+tendrá también posibilidad de agendar con tiempo de al menos 3 meses
+
+también tendrá para eventos formales y comunes
+
+nos enfocaremos en el publico pequeño mas que en los grandes eventos
+
+
+
+=== FIN ARCHIVO: README.md ===
+
+=== INICIO ARCHIVO: css\body.css ===
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box
+}
+
+body{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: #f8f6f0;
+    color: #1b2a38;
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+}
+=== FIN ARCHIVO: css\body.css ===
+
+=== INICIO ARCHIVO: css\catalogo.css ===
+/* css/catalogo.css */
+.main-catalogo {
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.barra-filtros {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: #e6e1d8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.input-buscar {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-filtro {
+    background-color: #2a434d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.grilla-catalogo {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tarjeta-evento {
+    background-color: white;
+    border: 2px solid #2a434d;
+    border-radius: 8px;
+    width: 250px;
+    padding: 15px;
+    text-align: left;
+}
+
+.imagen-placeholder {
+    width: 100%;
+    height: 150px;
+    background-color: #ced4d6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    color: #555;
+}
+
+.tarjeta-evento h3 {
+    color: #d9745f;
+    margin-bottom: 5px;
+}
+=== FIN ARCHIVO: css\catalogo.css ===
+
+=== INICIO ARCHIVO: css\estilo-login.css ===
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+
+body {
+    background-color: #2a434d; 
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px;
+}
+
+
+header, main, footer {
+    width: 100%;
+    max-width: 450px; 
+}
+
+
+.cabecilla-login {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.icono-login img {
+    width: 80px; 
+    height: auto;
+}
+
+
+.login-from {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+
+.box {
+    background-color: #ced4d6;
+    border: none;
+    padding: 16px; 
+    font-size: 16px; 
+    color: #000;
+    width: 100%;
+    outline: none;
+    border-radius: 3px;
+}
+
+.box::placeholder {
+    color: #333;
+}
+
+
+#btn-usuario {
+    background-color: #d9745f;
+    color: white;
+    border: none;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 3px;
+}
+
+.l-contraseña {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+}
+
+
+footer {
+    margin-top: 60px; 
+}
+
+.btn-crear-cuenta {
+    background-color: #d9745f;
+    color: white;
+    border: none;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 3px;
+}
+=== FIN ARCHIVO: css\estilo-login.css ===
+
+=== INICIO ARCHIVO: css\estilo.css ===
+@import url(header.css);
+@import url(body.css);
+@import url(footer.css);
+@import url(nav.css);
+@import url(main.css);
+@import url(features_main.css);
+
+* {
+    color: #1a2b3c;
+    background-color: #f5f0e6;
+    border-bottom-color: #d37c6a;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    accent-color: #d17a6c;
+    line-height: 1.5;   
+}
+=== FIN ARCHIVO: css\estilo.css ===
+
+=== INICIO ARCHIVO: css\estilo_menu.css ===
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+body {
+    background-color: #2a434d; 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+header > div:first-child img {
+    width: 60px; 
+}
+
+header > div:last-child img {
+    width: 70px; 
+    cursor: pointer;
+}
+
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px; 
+    width: 100%;
+}
+
+main > div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 300px; 
+    padding: 12px 25px;
+    
+    
+    border: 1px solid transparent;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    border-radius: 25px; 
+}
+
+
+main > div:nth-child(3) {
+    position: relative;
+    margin-bottom: 20px; 
+}
+
+main > div:nth-child(3)::after {
+    content: "";
+    position: absolute;
+    bottom: -15px; 
+    left: 15%; 
+    width: 70%; 
+    height: 1px;
+    background-color: white;
+}
+
+
+.iconos {
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.iconos img {
+    width: 100%;
+    max-width: 22px;
+    height: auto;
+
+}
+
+main a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+}
+=== FIN ARCHIVO: css\estilo_menu.css ===
+
+=== INICIO ARCHIVO: css\evento.css ===
+.main-evento {
+    padding: 0 20px 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cabecera-evento {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 15px 0;
+    border-bottom: 2px solid #ccc; /* Línea separadora tenue */
+    margin-bottom: 20px;
+}
+
+.cabecera-evento .icono-menu {
+    position: absolute;
+    left: 0;
+    width: 35px;
+    mix-blend-mode: multiply;
+}
+
+.cabecera-evento h2 {
+    font-size: 1.2rem;
+    color: #2a434d;
+}
+
+.contenedor-formulario {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.columna-izq, .columna-der {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Imagen del calendario */
+.caja-calendario img {
+    width: 100%;
+    border-radius: 8px;
+    border: 2px solid #2a434d;
+}
+
+/* Estilos de Inputs y Textareas */
+.grupo-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.grupo-input label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #2a434d;
+}
+
+.grupo-input input, .grupo-input textarea {
+    background-color: #2a434d;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.grupo-input input::placeholder, .grupo-input textarea::placeholder {
+    color: #a0aab2;
+}
+
+/* Botones */
+.btn-agregar-inv {
+    background-color: #d9745f;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    align-self: center; /* Centra el botón en su columna */
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-agendar-final {
+    background-color: #d9745f;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto 0 auto; /* Centrado absoluto abajo */
+}
+
+/* Sección Inferior */
+.seccion-inferior {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ancho-completo {
+    width: 100%;
+    max-width: 600px;
+}
+
+.grupo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #2a434d;
+    font-size: 0.9rem;
+}
+
+.check-circulo {
+    width: 20px;
+    height: 20px;
+    background-color: #d9745f;
+    border-radius: 5px;
+}
+
+.icono-descarga {
+    width: 20px;
+    mix-blend-mode: multiply;
+}
+=== FIN ARCHIVO: css\evento.css ===
+
+=== INICIO ARCHIVO: css\features_main.css ===
+.features{
+    display: flex;
+    flex-direction: column;
+    gap: 30;
+    padding: 50px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.features > div{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.icono-a,.icono-b,.icono-c{
+    font-size: 2.5rem;
+    color: #1b2a38;
+}
+
+.features p{
+    font-size: 1.1rem;
+}
+=== FIN ARCHIVO: css\features_main.css ===
+
+=== INICIO ARCHIVO: css\footer.css ===
+footer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #e6e1d8;
+    padding: 30px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.redes-sociales,.info-pag a{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-pag{
+    text-align: right;
+    mix-blend-mode: multiply;
+    
+}
+=== FIN ARCHIVO: css\footer.css ===
+
+=== INICIO ARCHIVO: css\formularios-extra.css ===
+/* css/formularios-extra.css */
+.main-centrado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.titulo-seccion {
+    color: #2a434d;
+    margin-bottom: 10px;
+}
+
+.subtitulo-seccion {
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.caja-formulario {
+    background-color: #2a434d; /* Azul oscuro de tu diseño */
+    padding: 30px;
+    border-radius: 8px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.caja-formulario label, .form-newsletter h3 {
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.caja-formulario input, 
+.caja-formulario textarea, 
+.input-select {
+    background-color: #ced4d6; /* Gris de tus inputs de login */
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    width: 100%;
+}
+
+.btn-accion {
+    background-color: #d9745f; /* Coral de tus botones */
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+    transition: transform 0.2s ease;
+}
+
+.btn-accion:hover {
+    transform: scale(1.02);
+}
+
+.avatar-perfil {
+    width: 100px;
+    height: 100px;
+    background-color: #2a434d;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.avatar-perfil img {
+    width: 60%;
+    filter: invert(1); /* Pone el icono blanco */
+}
+
+.texto-nosotros {
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.8;
+}
+=== FIN ARCHIVO: css\formularios-extra.css ===
+
+=== INICIO ARCHIVO: css\header.css ===
+.inicio-cabecilla{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-attachment: fixed;
+    padding: 15px 15px;
+    border-bottom: 2px solid white;
+}
+
+.logo{
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 40%;
+    justify-content: center;
+}
+
+.logo img{
+    width: 100%;
+    height: 40%;
+    mix-blend-mode: multiply;
+
+}
+
+.icono-usuario{
+    width: 12%;
+    height: 12%;
+    
+}
+
+.icono-usuario img{
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 40%;
+    mix-blend-mode: multiply;
+}
+
+.icono-buscar{
+    width: 12%;
+    height: 12%;
+    
+}
+
+.icono-buscar img {
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 40%;
+    mix-blend-mode: multiply;
+    transition: transform 0.3s ease; 
+}
+
+.icono-buscar img:hover {
+    transform: scale(1.15) rotate(-10deg); 
+}
+
+
+
+
+
+
+
+=== FIN ARCHIVO: css\header.css ===
+
+=== INICIO ARCHIVO: css\main.css ===
+.agrevento-sect{
+    position: relative;
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.imagen-inicio{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.imagen-inicio img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#btn-agregar-evento{
+    position: relative;
+    z-index: 2;
+    background-color: rgb(208, 122, 0.85);
+    color: #1b2a38;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+
+}
+
+#btn-agregar-evento:hover {
+    background-color: rgba(209, 122, 108, 1); /* Quita la transparencia para que el color sea sólido y brillante */
+    transform: scale(1.05); /* Aumenta el tamaño de todo el botón en un 5% */
+    box-shadow: 0 6px 12px rgba(8, 47, 175, 0.322); /* Hace la sombra más grande y oscura para dar sensación de que se levanta */
+}
+
+.icono-a, .icono-b,.icono-c{
+    width: 10%;
+    height: 10%;
+
+}
+
+.icono-a img, .icono-b img,.icono-c img{
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 40%;
+    mix-blend-mode: multiply;
+}
+=== FIN ARCHIVO: css\main.css ===
+
+=== INICIO ARCHIVO: css\nav.css ===
+nav {
+    display: flex;
+    align-items: center;      
+    justify-content: center;  
+    position: relative;       
+    background-color: #e6e1d8;
+    padding: 15px 30px;       
+}
+
+#btn-abrir-menu {
+    position: absolute;
+    object-fit: cover;
+    left: 30px;       
+    width: 35px;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#btn-abrir-menu img {
+    width: 100%;              
+    display: block;  
+    transition: transform 0.2s ease-in-out;  
+    mix-blend-mode: multiply;       
+}
+
+#btn-abrir-menu img:hover {
+    transform: scale(1.1); 
+}
+
+.sub-nav {
+    font-size: 1.1rem;        
+    color: #1b2a38;
+    margin: 0;               
+}
+=== FIN ARCHIVO: css\nav.css ===
+
