@@ -1,3 +1,5 @@
+/* Importo todas mis otras hojas de estilo aquí para tener todo modular y ordenado. 
+   Así es mucho más fácil hacer mantenimiento si se daña una parte de la página en el futuro. */
 @import url(header.css);
 @import url(body.css);
 @import url(footer.css);
@@ -5,11 +7,12 @@
 @import url(main.css);
 @import url(features_main.css);
 
+/* Selector universal (*): Aplica estos valores a absolutamente todo el documento por defecto */
 * {
     color: #1a2b3c;
-    background-color: #f5f0e6;
+    background-color: #f5f0e6; /* Color crema corporativo para el fondo general */
     border-bottom-color: #d37c6a;
     font-family: Georgia, 'Times New Roman', Times, serif;
-    accent-color: #d17a6c;
-    line-height: 1.5;   
+    accent-color: #d17a6c; /* Propiedad clave: Cambia el color azul por defecto de los checkbox a nuestro color coral */
+    line-height: 1.5; /* Separa un poco las líneas de texto para que la lectura sea más limpia */
 }

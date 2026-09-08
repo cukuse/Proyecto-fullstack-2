@@ -1,20 +1,22 @@
+/* Contenedor principal del footer */
 footer {
-    display: flex;
-    justify-content: space-between;
-    background-color: #e6e1d8;
-    padding: 30px;
-    font-size: 0.8rem;
+    display: flex; /* Activa Flexbox para distribuir bloques a la izquierda y derecha */
+    justify-content: space-between; /* Empuja las redes sociales a la izquierda y los textos legales a la derecha */
+    background-color: #e6e1d8; /* Mismo color exacto que el 'nav' para crear una simetría de diseño (arriba y abajo) */
+    padding: 30px; 
+    font-size: 0.8rem; /* Letra más pequeña para textos secundarios o legales */
     font-weight: bold;
 }
 
-.redes-sociales,.info-pag a{
+/* Agrupación vertical de redes sociales y enlaces */
+.redes-sociales, .info-pag a {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    flex-direction: column; /* Cambia el comportamiento de Flexbox: en vez de colocar elementos uno al lado del otro, los apila verticalmente */
+    gap: 5px; /* Crea un espacio exacto de 5px entre cada texto sin necesidad de calcular márgenes manuales */
 }
 
-.info-pag{
-    text-align: right;
+/* Contenedor de la información legal y derechos */
+.info-pag {
+    text-align: right; /* Alinea las frases hacia la derecha para mantener la prolijidad contra ese borde */
     mix-blend-mode: multiply;
-    
 }
