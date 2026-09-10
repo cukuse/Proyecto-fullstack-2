@@ -1,71 +1,103 @@
-/* css/catalogo.css */
+/* --- CONTENEDOR PRINCIPAL --- */
 .main-catalogo {
     padding: 40px 20px;
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
-    text-align: center;
 }
 
-/* Barra superior donde van los filtros de búsqueda */
+.titulo-seccion {
+    text-align: center;
+    color: #2a434d;
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+}
+
+/* --- BARRA DE FILTROS --- */
 .barra-filtros {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap; /* Permite que los elementos bajen de línea si la pantalla es pequeña */
     align-items: center;
-    gap: 15px;
+    justify-content: center;
+    gap: 20px;
     background-color: #e6e1d8;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 30px;
-    flex-wrap: wrap; /* RESPONSIVE: Si la pantalla es muy chica (como un celular), los filtros bajan a la siguiente línea automáticamente */
+    padding: 15px 25px;
+    border-radius: 10px;
+    margin-bottom: 40px;
 }
 
 .input-buscar {
-    padding: 8px;
+    flex: 1; /* Hace que la barra de búsqueda ocupe el mayor espacio posible */
+    min-width: 200px;
+    padding: 10px 15px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
+    font-family: 'Georgia', serif;
 }
 
-.btn-filtro {
-    background-color: #2a434d;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
+.barra-filtros label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #1b2a38;
+    font-weight: bold;
     cursor: pointer;
 }
 
-/* Contenedor principal de la galería de fotos */
-.grilla-catalogo {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap; /* RESPONSIVE: Esencial para una galería. Si no caben 3 fotos por el ancho de la pantalla, la última cae suavemente a la fila de abajo */
+.btn-filtro {
+    background-color: #d9745f;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Cada "carta" o foto de evento */
+.btn-filtro:hover {
+    background-color: #b56555;
+}
+
+/* --- GRILLA DE TARJETAS (CSS GRID) --- */
+.grilla-catalogo {
+    display: grid;
+    /* TRUCO PRO: Crea columnas automáticas que miden al menos 280px y se estiran si hay espacio */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* --- DISEÑO DE CADA TARJETA --- */
 .tarjeta-evento {
     background-color: white;
-    border: 2px solid #2a434d;
-    border-radius: 8px;
-    width: 250px; /* Ancho fijo para mantener la uniformidad de la grilla */
-    padding: 15px;
-    text-align: left; /* Aunque el main esté centrado, el texto de la tarjeta se lee mejor a la izquierda */
+    border-radius: 12px;
+    overflow: hidden; /* Evita que las esquinas cuadradas de la foto tapen los bordes redondeados de la tarjeta */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Cuadrado gris que simula ser una foto cuando aún no tenemos la imagen real */
-.imagen-placeholder {
+.tarjeta-evento:hover {
+    transform: translateY(-8px); /* Eleva la tarjeta al pasar el mouse */
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15); /* Hace la sombra más grande para simular altura */
+}
+
+.imagen-placeholder img {
     width: 100%;
-    height: 150px;
-    background-color: #ced4d6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    color: #555;
+    height: 220px;
+    object-fit: cover;
+    display: block;
 }
 
 .tarjeta-evento h3 {
-    color: #d9745f;
-    margin-bottom: 5px;
+    color: #2a434d;
+    font-size: 1.3rem;
+    margin: 20px 20px 5px 20px;
+}
+
+.tarjeta-evento p {
+    color: #666;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 20px 20px 20px;
 }

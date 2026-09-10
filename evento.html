@@ -9,75 +9,88 @@
     <link rel="stylesheet" href="css/evento.css">
 </head>
 <body>
-    <!-- Cabecera idéntica a tu index.html -->
     <header class="inicio-cabecilla">
         <div class="icono-buscar"><img src="img/icono-buscar.png" alt="Buscar"></div>
         <div class="logo"><a href="index.html"><img src="img/logo2.png" alt="Logo"></a></div>
         <div class="icono-usuario"><a href="login.html"><img src="img/icono-usuario.png" alt="Usuario"></a></div>
     </header>
+    <nav>
+        <div id="btn-abrir-menu"><a href="menu.html"><img src="img/ambulgel-menu.png" alt=""></a></div>
+        
+        <p class="sub-nav"><strong>celebra tu evento de una forma especial :D</strong></p>
+    </nav>
 
     <main class="main-evento">
-        <!-- Submenú -->
-        <div class="cabecera-evento">
-            <a href="menu.html"><img src="img/ambulgel-menu.png" alt="Menú" class="icono-menu"></a>
-            <h2>agendar tu evento :D</h2>
-        </div>
-
-        <div class="contenedor-formulario">
-            <!-- Columna Izquierda -->
-            <div class="columna-izq">
-                <div class="caja-calendario">
-                    <!-- IMAGEN LIBRE 1: Aquí debes poner un recorte o captura del calendario cuadrado de la foto -->
-                    <img src="img/calendario.png" alt="Calendario Septiembre 2026">
+        <form id="form-evento">
+            <div class="contenedor-formulario">
+                <!-- Columna Izquierda -->
+                <div class="columna-izq">
+                    <div class="caja-calendario">
+                        <img src="img/calendario.png" alt="Calendario Septiembre 2026">
+                    </div>
+                    
+                    <div class="grupo-input">
+                        <label>mensaje para los invitados:</label>
+                        <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
+                    </div>
                 </div>
-                
-                <div class="grupo-input">
-                    <label>mensaje para los invitados:</label>
+
+                <!-- Columna Derecha -->
+                <div class="columna-der">
+                    <div class="grupo-input">
+                        <label>*cantidad de invitados</label>
+                        <input type="number" id="evento-invitados" placeholder="Ej: 50">
+                        <p class="mensaje-error" id="error-invitados"></p>
+                    </div>
+                    
+                    <div class="grupo-input">
+                        <label>*nombre invitado/a</label>
+                        <input type="text" placeholder="xxxxxx">
+                    </div>
+                    <div class="grupo-input">
+                        <label>*correo del invitado</label>
+                        <input type="email" placeholder="xxxxxx">
+                    </div>
+                    
+                    <div class="grupo-input">
+                        <label>*numero del invitado</label>
+                        <input type="tel" id="evento-telefono" placeholder="+56 9 **** ****">
+                        <p class="mensaje-error" id="error-telefono"></p>
+                    </div>
+                    
+                    <button type="button" class="btn-agregar-inv">Agregar invitado</button>
+                </div>
+            </div>
+            
+            <!-- Zona reubicada: Dirección seguida de la Fecha -->
+            <div class="grupo-input ancho-completo" style="margin-bottom: 15px;">
+                <input type="text" id="evento-direccion" class="input-box" placeholder="Dirección del evento (Ej: Av. Las Condes 1234)">
+                <span id="error-direccion" class="mensaje-error"></span>
+            </div>
+            
+            <div class="grupo-input ancho-completo">
+                <label style="color: #2a434d; font-weight: bold;">Elige la fecha del evento:</label>
+                <!-- Al usar type="date", el navegador crea el calendario desplegable -->
+                <input type="date" id="evento-fecha" class="input-box">
+                <span id="error-fecha" class="mensaje-error"></span>
+            </div>
+
+            <!-- Sección Inferior -->
+            <div class="seccion-inferior">
+                <div class="grupo-input ancho-completo" style="margin-top: 15px;">
+                    <label>comentarios o grandes rasgos del evento</label>
                     <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
                 </div>
-            </div>
 
-            <!-- Columna Derecha -->
-            <div class="columna-der">
-                <div class="grupo-input">
-                    <label>*calle o locacion</label>
-                    <input type="text" placeholder="xx/xx/xxxx">
+                <div class="grupo-checkbox">
+                    <div class="check-circulo"></div>
+                    <label>Terminos y condiciones</label>
+                    <img src="img/terminos-condiciones.png" alt="Descargar" class="icono-descarga">
                 </div>
-                <div class="grupo-input">
-                    <label>*cantidad de invitados</label>
-                    <input type="text" placeholder="xxxxxx">
-                </div>
-                <div class="grupo-input">
-                    <label>*nombre cumpleañero/a</label>
-                    <input type="text" placeholder="xxxxxx">
-                </div>
-                <div class="grupo-input">
-                    <label>*correo del invitado</label>
-                    <input type="email" placeholder="xxxxxx">
-                </div>
-                <div class="grupo-input">
-                    <label>*numero del invitado</label>
-                    <input type="tel" placeholder="+56 9 **** ****">
-                </div>
-                <button class="btn-agregar-inv">Agregar invitado</button>
-            </div>
-        </div>
 
-        <!-- Sección Inferior -->
-        <div class="seccion-inferior">
-            <div class="grupo-input ancho-completo">
-                <label>comentarios o grandes rasgos del evento</label>
-                <textarea rows="3" placeholder="Tu mensaje aquí..."></textarea>
+                <button type="submit" class="btn-agendar-final">Agendar Evento</button>
             </div>
-
-            <div class="grupo-checkbox">
-                <div class="check-circulo"></div>
-                <label>coordinar y analizar mas para agendar tu dia especial</label>
-                <img src="img/terminos-condiciones.png" alt="Descargar" class="icono-descarga">
-            </div>
-
-            <button class="btn-agendar-final">Agendar Evento</button>
-        </div>
+        </form>
     </main>
 
     <!-- Footer idéntico a tu index.html -->
@@ -92,5 +105,7 @@
             <p>Botón de arrepentimiento</p>
         </div>
     </footer>
+
+    <script src="jss/validacion_evento.js"></script>
 </body>
 </html>
