@@ -1,58 +1,60 @@
 /* Contenedor principal del header. Uso Flexbox para alinear los elementos (lupa, logo, usuario) en una sola fila horizontal */
 .inicio-cabecilla {
-    display: flex; 
-    justify-content: space-between; /* Empuja la lupa a la izquierda, el logo al centro y el usuario a la derecha */
-    align-items: center; /* Centra todo verticalmente para que ningún icono quede más arriba que otro */
-    background-attachment: fixed; /* Mantiene el fondo quieto si es que hubiera una imagen de fondo aquí */
-    padding: 15px 15px; /* Da un poco de aire por dentro para que los iconos no choquen con los bordes */
-    border-bottom: 2px solid white; /* Línea blanca decorativa que separa el header del resto del contenido */
+    width: 100%;
+    min-height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 35px;
+
+    background-color: #f5f0e6;
+    border-bottom: 1px solid #ded6ca;
 }
 
 /* Contenedor específico del logo */
 .logo {
-    top: 0;
-    left: 0;
-    width: 50%; /* Le doy la mitad del ancho del header para que sea el elemento dominante */
-    height: 40%;
-    justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 180px;
 }
 
 /* La imagen del logo por dentro de su contenedor */
 .logo img {
+    display: block;
     width: 100%;
-    height: 40%;
-    mix-blend-mode: multiply; /* VISUAL: Multiplica los colores de la imagen con el fondo, borrando el fondo blanco del logo y fusionándolo con el crema de la página */
+    height: auto;
 }
 
 /* Contenedores para los iconos de los extremos (usuario y búsqueda) */
+/* Iconos */
+.icono-buscar,
 .icono-usuario {
-    width: 12%; /* Ocupan un porcentaje pequeño para dejarle el protagonismo al logo */
-    height: 12%;
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.icono-buscar img,
 .icono-usuario img {
-    top: 0;
-    left: 0;
-    width: 70%;
-    height: 40%;
-    mix-blend-mode: multiply; /* iconos no se vean como "parches" cuadrados blancos */
-}
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
 
-.icono-buscar {
-    width: 12%;
-    height: 12%;
-}
-
-.icono-buscar img {
-    top: 0;
-    left: 0;
-    width: 70%;
-    height: 40%;
     mix-blend-mode: multiply;
-    transition: transform 0.3s ease; /* Prepara para la animación: hace que cualquier cambio de 'transform' tome 0.3 segundos y sea suave */
 }
 
-/* Estado :hover. Lo que pasa cuando el usuario pone el mouse encima de la lupa */
-.icono-buscar img:hover {
-    transform: scale(1.15) rotate(-10deg); /* La lupa crece un 15% (1.15) y se inclina 10 grados hacia la izquierda (-10deg) */
+.icono-buscar img,
+.icono-usuario img {
+    transition: transform 0.2s ease;
+}
+
+.icono-buscar img:hover,
+.icono-usuario img:hover {
+    transform: scale(1.1);
 }

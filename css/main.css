@@ -1,53 +1,62 @@
 /* Contenedor principal del (la imagen grande con el boton) */
 .agrevento-sect {
-    position: relative; /* define este contenedor como el límite o "caja principal" para los elementos absolutos que van adentro */
+    position: relative;
+
     width: 100%;
-    height: 350px; /* se le una altura fija para que la imagen de fondo tenga espacio donde mostrarse */
+    min-height: 480px;
+
     display: flex;
-    justify-content: center; /* Centra el botón horizontalmente */
-    align-items: center; /* Centra el botón verticalmente */
-    overflow: hidden; /* CORTA cualquier exceso de la imagen si es más grande que 350px, para que no deforme la página */
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
 }
 
 /* Contenedor de la imagen de fondo */
 .imagen-inicio {
-    position: absolute; /* Saca la imagen del flujo normal y la pega a los bordes del contenedor .agrevento-sect */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Envía la imagen al fondo, como si fuera la capa más baja en Photoshop */
+    position: absolute;
+    inset: 0;
+}
+
+.imagen-inicio::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 25, 30, 0.25);
 }
 
 /* La imagen de fondo propiamente tal */
 .imagen-inicio img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Hace que la imagen se recorte y adapte al contenedor sin estirarse ni aplastarse, manteniendo su proporción */
+    object-fit: cover;
 }
 
 /* El botón principal "Agregar Evento" que flota sobre la imagen */
 #btn-agregar-evento {
     position: relative;
-    z-index: 2; /* Nivel 2: Asegura que el botón quede por encima de la imagen de fondo (z-index 1) para que se pueda hacer clic */
-    background-color: tomato; /* Uso RGB para darle color coral pero con un 85% de opacidad (un poco transparente) */
-    color: #1b2a38;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    font-size: 1.6rem; /* Letra grande para llamar la atención del usuario */
+    z-index: 2;
+
+    padding: 14px 32px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #d17a6c;
+    color: white;
+
+    font-size: 1.1rem;
     font-weight: bold;
-    padding: 15px 39px;
-    border: none; /* Le quito el borde feo que traen los botones HTML por defecto */
-    border-radius: 40px; /* Bordes redondeados en forma de pastilla */
+
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave para darle un efecto 3D de que está flotando */
-    transition: all 0.3s ease; /* Prepara el botón para animar cualquier cambio suavemente durante 0.3 segundos */
+
+    transition: all 0.25s ease;
 }
 
 /* Efecto al pasar el mouse por el botón principal */
 #btn-agregar-evento:hover {
-    background-color: rgba(209, 122, 108, 1); /* Quita la transparencia, el color se vuelve sólido e intenso */
-    transform: scale(1.05); /* El botón crece un 5% (1.05x) */
-    box-shadow: 0 6px 12px rgba(8, 47, 175, 0.322); /* La sombra se hace más grande para simular que el botón se levanta hacia el usuario */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
 /* Ajustes de tamaño para los pequeños iconos de características */
