@@ -1,0 +1,86 @@
+/* css/formularios-extra.css */
+.main-centrado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.titulo-seccion {
+    color: #2a434d;
+    margin-bottom: 10px;
+}
+
+.subtitulo-seccion {
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.caja-formulario {
+    background-color: #2a434d; /* Azul oscuro de tu diseño */
+    padding: 30px;
+    border-radius: 8px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.caja-formulario label, .form-newsletter h3 {
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.caja-formulario input, 
+.caja-formulario textarea, 
+.input-select {
+    background-color: #ced4d6; /* Gris de tus inputs de login */
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    width: 100%;
+}
+
+.btn-accion {
+    background-color: #d9745f; /* Coral de tus botones */
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+    transition: transform 0.2s ease;
+}
+
+.btn-accion:hover {
+    transform: scale(1.02);
+}
+
+.avatar-perfil {
+    width: 100px;
+    height: 100px;
+    background-color: #2a434d;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.avatar-perfil img {
+    width: 60%;
+    filter: invert(1); /* Pone el icono blanco */
+}
+
+.texto-nosotros {
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 1.8;
+}
