@@ -1,0 +1,26 @@
+/* Contenedor que envuelve a los tres puntos fuertes de la empresa ("Aforos Pequeños", etc.) */
+.features {
+    display: flex;
+    flex-direction: column; /* Apila las 3 características verticalmente, una debajo de otra */
+    gap: 30px; /* Genera exactamente 30px de separación entre cada bloque, sin usar margins */
+    padding: 50px 40px; /* Da espacio por dentro para que no choquen con la imagen de arriba o el footer de abajo */
+    max-width: 800px; /* Evita que los textos se estiren infinitamente en pantallas de computador grandes */
+    margin: 0 auto; /* Empuja el bloque completo hacia el centro exacto de la pantalla (margen automático a los lados) */
+}
+
+/* Configuración de CADA característica individual (icono + texto) */
+.features > div {
+    display: flex;
+    align-items: center; /* Alinea el icono al mismo nivel vertical que el centro del texto */
+    gap: 25px; /* Separa el icono del párrafo de texto que tiene al lado */
+}
+
+/* Ajuste de fuentes y colores específicos para estos iconos y textos */
+.icono-a, .icono-b, .icono-c {
+    font-size: 2.5rem;
+    color: #1b2a38;
+}
+
+.features p {
+    font-size: 1.1rem;
+}

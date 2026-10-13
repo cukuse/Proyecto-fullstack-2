@@ -1,0 +1,87 @@
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #2F424D !important;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-overlay *,
+.menu-overlay div,
+.menu-overlay span,
+.menu-overlay img,
+.menu-overlay a {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.logo-menu-superior {
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    width: 40px;
+    height: 40px;
+}
+
+.logo-menu-superior img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.boton-cerrar {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.menu-enlaces {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+    width: 100%;
+    max-width: 450px;
+}
+
+.enlace-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    width: 100%;
+}
+
+.parentesis {
+    font-size: 28px;
+    font-weight: 300;
+    color: white;
+    line-height: 1;
+}
+
+.icono-link {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.linea-separadora {
+    width: 60%;
+    height: 1px !important;
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    margin: 10px 0;
+}
