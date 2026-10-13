@@ -13,10 +13,6 @@ function Cabecera() {
     return (
         <>
             <header className="inicio-cabecilla">
-                {/* Agregamos el evento onClick al icono para abrir el menú */}
-                <div className="icono-buscar" onClick={alternarMenu} style={{ cursor: 'pointer' }}>
-                    <img src="/img/icono-buscar.png" alt="Menú"/>
-                </div>
                 
                 <div className="logo">
                     <Link to="/">

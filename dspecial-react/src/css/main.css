@@ -9,8 +9,9 @@
     align-items: center;
     justify-content: center;
 
-    overflow: hidden;
+
 }
+
 
 /* Contenedor de la imagen de fondo */
 .imagen-inicio {
@@ -53,8 +54,69 @@
     transition: all 0.25s ease;
 }
 
+#btn-contactanos {
+    position: relative;
+    z-index: 2;
+
+    margin-left: 16px;
+    padding: 5px 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #d17a6c;
+    color: white;
+
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+#btn-nosotros {
+    position: relative;
+    z-index: 2;
+
+    margin-left: 16px;
+    padding: 5px 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #d17a6c;
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+#btn-carrito {
+    position: relative;
+    z-index: 2;
+
+    margin-left: 16px;
+    padding: 5px 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #1a2b3c;
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
 /* Efecto al pasar el mouse por el botón principal */
-#btn-agregar-evento:hover {
+#btn-agregar-evento:hover, #btn-nosotros:hover, #btn-contactanos:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
