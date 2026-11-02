@@ -55,34 +55,75 @@ export default defineConfig({
 ARCHIVO: dspecial-react\src\App.jsx
 ================================================================================
 
-import { useEffect, useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
-import Pie from './components/footer'
-import Home from './pages/Home'
-import Contacto from './pages/Contacto'
-import Nosotros from './pages/Nosotros'
-import Catalogo from './pages/catalogo'
-import Carrito from './pages/carrito'
-import Blog from './pages/blog'
-import Login from './pages/Login'   
+// Layout / Componentes Globales
+import Cabecera from './components/cabecera';
+import Navegacion from './components/navegacion';
+import Pie from './components/footer';
 
-import Cabecera from './components/cabecera'
-import Navegacion from './components/navegacion'
+// Páginas / Vistas
+import Home from './pages/Home';
+import Contacto from './pages/Contacto';
+import Nosotros from './pages/Nosotros';
+import Catalogo from './pages/catalogo';
+import Carrito from './pages/carrito';
+import Blog from './pages/blog';
+import Login from './pages/Login';
+import Admin from './pages/Admin';
+import Checkout from './pages/Checkout';
 
+// ----------------------------------------------------------------------
+// DATOS INICIALES DE PRUEBA (MOCK DATA)
+// ----------------------------------------------------------------------
+const PRODUCTOS_INICIALES = [
+  { id: 1, titulo: "Boda al aire libre", categoria: "matrimonios", aforo: "Aforo: 50 personas", precio: 150000, imagen: "/img/boda-catalgo.jpg", oferta: false },
+  { id: 2, titulo: "Cumpleaños Temático", categoria: "cumpleanos", aforo: "Aforo: 30 personas", precio: 80000, precioAnterior: 100000, imagen: "/img/cumple-catalogo.jpg", oferta: true },
+  { id: 3, titulo: "Evento Corporativo", categoria: "corporativos", aforo: "Aforo: 100 personas", precio: 250000, imagen: "/img/corporativo-catalogo.jpg", oferta: false },
+  { id: 4, titulo: "Fiesta de Graduación", categoria: "corporativos", aforo: "Aforo: 80 personas", precio: 180000, precioAnterior: 220000, imagen: "/img/graduacion-catalogo.jpg", oferta: true },
+  { id: 5, titulo: "Baby Shower Especial", categoria: "cumpleanos", aforo: "Aforo: 25 personas", precio: 60000, imagen: "/img/babyshower-catalogo.jpg", oferta: false }
+];
+
+const VENTAS_INICIALES = [
+  { id: 'V-1001', cliente: 'María López', evento: 'Boda al aire libre', monto: 150000, fecha: '2026-03-01', estado: 'Completado', banco: 'Banco de Chile', tarjeta: 'Visa **** 4321' }
+];
+
+const HISTORIAL_INICIAL = [
+  { id: 1, usuario: 'Sistema', accion: 'Inicialización de la plataforma', fecha: '2026-03-01 10:00:00', rol: 'admin' }
+];
+
+// ----------------------------------------------------------------------
+// COMPONENTE PRINCIPAL (APP)
+// ----------------------------------------------------------------------
 function App() {
-  //  Estado del Carrito
+  // --- 1. ESTADOS CON PERSISTENCIA EN LOCALSTORAGE ---
   const [carrito, setCarrito] = useState(() => {
     const guardado = localStorage.getItem('carrito_tu_dia');
     return guardado ? JSON.parse(guardado) : [];
   });
 
-  // Estado del Usuario 
   const [usuario, setUsuario] = useState(() => {
     const usuarioGuardado = localStorage.getItem('usuario_tu_dia');
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
   });
 
+  const [productos, setProductos] = useState(() => {
+    const guardados = localStorage.getItem('productos_tu_dia');
+    return guardados ? JSON.parse(guardados) : PRODUCTOS_INICIALES;
+  });
+
+  const [ventas, setVentas] = useState(() => {
+    const guardadas = localStorage.getItem('ventas_tu_dia');
+    return guardadas ? JSON.parse(guardadas) : VENTAS_INICIALES;
+  });
+
+  const [historial, setHistorial] = useState(() => {
+    const guardado = localStorage.getItem('historial_tu_dia');
+    return guardado ? JSON.parse(guardado) : HISTORIAL_INICIAL;
+  });
+
+  // --- 2. EFECTOS (SINCRONIZACIÓN CON LOCALSTORAGE) ---
   useEffect(() => {
     localStorage.setItem('carrito_tu_dia', JSON.stringify(carrito));
   }, [carrito]);
@@ -95,44 +136,106 @@ function App() {
     }
   }, [usuario]);
 
-  const agregarAlCarrito = (producto) => {
-    setCarrito([...carrito, producto]);
+  useEffect(() => {
+    localStorage.setItem('productos_tu_dia', JSON.stringify(productos));
+  }, [productos]);
+
+  useEffect(() => {
+    localStorage.setItem('ventas_tu_dia', JSON.stringify(ventas));
+  }, [ventas]);
+
+  useEffect(() => {
+    localStorage.setItem('historial_tu_dia', JSON.stringify(historial));
+  }, [historial]);
+
+  // --- 3. FUNCIONES DE LÓGICA Y EVENTOS ---
+  const registrarActividad = (accion, rolEjecutor = 'cliente') => {
+    const nuevoRegistro = {
+      id: Date.now(),
+      usuario: usuario ? usuario.email : 'Anónimo',
+      accion,
+      fecha: new Date().toLocaleString('es-CL'),
+      rol: usuario ? usuario.rol : rolEjecutor
+    };
+    setHistorial(prev => [nuevoRegistro, ...prev]);
   };
 
-  // Funciones de Sesión
+  const agregarAlCarrito = (producto) => {
+    setCarrito(prev => [...prev, producto]);
+    registrarActividad(`Producto "${producto.titulo}" agregado al carrito`);
+  };
+
   const loginUsuario = (datosUsuario) => {
     setUsuario(datosUsuario);
+    registrarActividad(`Inicio de sesión de ${datosUsuario.nombre}`, datosUsuario.rol);
   };
 
   const logoutUsuario = () => {
+    if (usuario) {
+      registrarActividad(`Cierre de sesión de ${usuario.nombre}`, usuario.rol);
+    }
     setUsuario(null);
   };
 
+  // --- 4. ESTRUCTURA Y RUTAS ---
   return (
     <>
       <Cabecera usuario={usuario} logout={logoutUsuario} />
       <Navegacion totalItems={carrito.length} usuario={usuario} />
 
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/contacto' element={<Contacto />} />
-        <Route path='/Nosotros' element={<Nosotros />} />
-        <Route path='/catalogo' element={<Catalogo agregarAlCarrito={agregarAlCarrito} />} />
-        <Route path='/carrito' element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
-        <Route path='/Blog' element={<Blog />} />
-        
+        {/* Rutas Estáticas */}
+        <Route path="/" element={<Home />} />
+        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/Nosotros" element={<Nosotros />} />
+        <Route path="/Blog" element={<Blog />} />
+
+        {/* Rutas Dinámicas con Estado */}
         <Route 
-          path='/login' 
+          path="/catalogo" 
+          element={<Catalogo productos={productos} agregarAlCarrito={agregarAlCarrito} />} 
+        />
+        <Route 
+          path="/carrito" 
+          element={<Carrito carrito={carrito} setCarrito={setCarrito} />} 
+        />
+        <Route 
+          path="/login" 
           element={<Login usuario={usuario} login={loginUsuario} logout={logoutUsuario} />} 
+        />
+        <Route 
+          path="/Admin" 
+          element={
+            <Admin 
+              usuario={usuario}
+              productos={productos}
+              setProductos={setProductos}
+              ventas={ventas}
+              historial={historial}
+              registrarActividad={registrarActividad}
+            />
+          } 
+        />
+        <Route 
+          path="/checkout" 
+          element={
+            <Checkout 
+              carrito={carrito}
+              setCarrito={setCarrito}
+              setVentas={setVentas}
+              registrarActividad={registrarActividad}
+              usuario={usuario}
+            />
+          } 
         />
       </Routes>
 
       <Pie />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
 
 --------------------------------------------------------------------------------
 
@@ -162,6 +265,344 @@ ARCHIVO: dspecial-react\src\setupTests.js
 ================================================================================
 
 import '@testing-library/jest-dom';
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\AdminBitacora.jsx
+================================================================================
+
+import React from 'react';
+
+function AdminBitacora({ historial }) {
+  return (
+    <section className="card shadow-sm mb-4">
+      <div className="card-header bg-dark text-white fw-bold">
+        📜 Bitácora de Registro (Actividad Admin & Cliente)
+      </div>
+      <div className="table-responsive">
+        <table className="table table-hover align-middle mb-0">
+          <thead className="table-light">
+            <tr>
+              <th>Fecha y Hora</th>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Acción Realizada</th>
+            </tr>
+          </thead>
+          <tbody>
+            {historial.map((reg) => (
+              <tr key={reg.id}>
+                <td><small className="text-muted">{reg.fecha}</small></td>
+                <td className="fw-semibold">{reg.usuario}</td>
+                <td>
+                  <span className={`badge ${reg.rol === 'admin' ? 'bg-primary' : 'bg-info text-dark'}`}>
+                    {reg.rol.toUpperCase()}
+                  </span>
+                </td>
+                <td>{reg.accion}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+export default AdminBitacora;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\AdminFormProducto.jsx
+================================================================================
+
+import React, { useState } from 'react';
+
+function AdminFormProducto({ onAgregarProducto }) {
+  const [titulo, setTitulo] = useState('');
+  const [categoria, setCategoria] = useState('matrimonios');
+  const [aforo, setAforo] = useState('Aforo: 30 personas');
+  const [precio, setPrecio] = useState('');
+  const [imagen, setImagen] = useState('/img/boda-catalgo.jpg');
+  const [oferta, setOferta] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!titulo || !precio) {
+      alert('Por favor completa el nombre y el precio.');
+      return;
+    }
+
+    const nuevoProducto = {
+      id: Date.now(),
+      titulo,
+      categoria,
+      aforo,
+      precio: Number(precio),
+      imagen,
+      oferta
+    };
+
+    onAgregarProducto(nuevoProducto);
+
+    // Limpiar formulario
+    setTitulo('');
+    setPrecio('');
+    setOferta(false);
+  };
+
+  return (
+    <section className="card shadow-sm mb-4">
+      <div className="card-header bg-dark text-white fw-bold">
+        ➕ Agregar Nuevo Evento al Catálogo
+      </div>
+      <div className="card-body">
+        <form onSubmit={handleSubmit}>
+          {/* row g-3: Fila de Bootstrap con espacio entre campos */}
+          <div className="row g-3">
+            
+            {/* Nombre del Evento */}
+            <div className="col-12 col-md-6">
+              <label className="form-label fw-bold">Nombre del Evento *</label>
+              <input 
+                type="text" 
+                className="form-control"
+                placeholder="Ej. Boda en la Playa"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                required
+              />
+            </div>
+
+            {/* Categoría */}
+            <div className="col-12 col-md-6">
+              <label className="form-label fw-bold">Categoría *</label>
+              <select 
+                className="form-select"
+                value={categoria}
+                onChange={(e) => setCategoria(e.target.value)}
+              >
+                <option value="matrimonios">💍 Matrimonios</option>
+                <option value="cumpleanos">🎂 Cumpleaños</option>
+                <option value="corporativos">💼 Corporativos</option>
+              </select>
+            </div>
+
+            {/* Precio */}
+            <div className="col-12 col-md-6">
+              <label className="form-label fw-bold">Precio ($ CLP) *</label>
+              <input 
+                type="number" 
+                className="form-control"
+                placeholder="Ej. 150000"
+                value={precio}
+                onChange={(e) => setPrecio(e.target.value)}
+                required
+              />
+            </div>
+
+            {/* Aforo */}
+            <div className="col-12 col-md-6">
+              <label className="form-label fw-bold">Aforo Estimado</label>
+              <input 
+                type="text" 
+                className="form-control"
+                placeholder="Ej. Aforo: 50 personas"
+                value={aforo}
+                onChange={(e) => setAforo(e.target.value)}
+              />
+            </div>
+
+            {/* Checkbox Oferta */}
+            <div className="col-12">
+              <div className="form-check">
+                <input 
+                  type="checkbox" 
+                  className="form-check-input"
+                  id="chkOfertaBs"
+                  checked={oferta}
+                  onChange={(e) => setOferta(e.target.checked)}
+                />
+                <label className="form-check-label fw-bold" htmlFor="chkOfertaBs">
+                  🔥 Marcar como evento en oferta
+                </label>
+              </div>
+            </div>
+
+            {/* Botón de Enviar */}
+            <div className="col-12">
+              <button type="submit" className="btn btn-dark w-100 fw-bold">
+                Guardar Producto en Catálogo
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+export default AdminFormProducto;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\AdminStats.jsx
+================================================================================
+
+import React from 'react';
+
+function AdminStats({ totalRecaudado, totalProductos, totalVentas, metaVentas = 1000000 }) {
+  // Cálculo del porcentaje dinámico de la meta de ventas
+  const porcentajeMeta = Math.min(Math.round((totalRecaudado / metaVentas) * 100), 100);
+
+  return (
+    <section className="mb-4">
+      {/* row: Fila de Bootstrap */}
+      <div className="row g-3">
+        
+        {/* Tarjeta 1: Ingresos Totales */}
+        <div className="col-12 col-md-4">
+          <div className="card bg-dark text-white shadow-sm h-100">
+            <div className="card-body">
+              <h5 className="card-title text-secondary fs-6">💰 Ingresos Totales</h5>
+              <p className="card-text fs-2 fw-bold mb-1">
+                ${totalRecaudado.toLocaleString('es-CL')}
+              </p>
+              <span className="badge bg-success">{totalVentas} ventas registradas</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Tarjeta 2: Productos en Catálogo */}
+        <div className="col-12 col-md-4">
+          <div className="card bg-dark text-white shadow-sm h-100">
+            <div className="card-body">
+              <h5 className="card-title text-secondary fs-6">📦 Catálogo Activo</h5>
+              <p className="card-text fs-2 fw-bold mb-1">
+                {totalProductos}
+              </p>
+              <span className="badge bg-info text-dark">Eventos disponibles</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Tarjeta 3: Meta de Ventas con Barra de Porcentaje */}
+        <div className="col-12 col-md-4">
+          <div className="card bg-dark text-white shadow-sm h-100">
+            <div className="card-body">
+              <h5 className="card-title text-secondary fs-6">🎯 Meta Mensual ({porcentajeMeta}%)</h5>
+              
+              {/* Contenedor de la Barra de Progreso de Bootstrap */}
+              <div className="progress mt-3" style={{ height: '16px' }}>
+                <div 
+                  className="progress-bar progress-bar-striped progress-bar-animated bg-danger" 
+                  role="progressbar" 
+                  style={{ width: `${porcentajeMeta}%` }} 
+                  aria-valuenow={porcentajeMeta} 
+                  aria-valuemin="0" 
+                  aria-valuemax="100"
+                >
+                  {porcentajeMeta}%
+                </div>
+              </div>
+
+              <div className="d-flex justify-content-between fs-6 text-secondary mt-2">
+                <small>$0</small>
+                <small>Meta: ${metaVentas.toLocaleString('es-CL')}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+export default AdminStats;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\AdminTablaProductos.jsx
+================================================================================
+
+import React from 'react';
+
+function AdminTablaProductos({ productos, onEliminarProducto }) {
+  return (
+    <section className="card shadow-sm mb-4">
+      <div className="card-header bg-dark text-white fw-bold d-flex justify-content-between align-items-center">
+        <span>📦 Inventario de Productos ({productos.length})</span>
+      </div>
+      
+      {/* table-responsive: Permite scroll horizontal en celulares si la tabla es ancha */}
+      <div className="table-responsive">
+        <table className="table table-hover table-striped align-middle mb-0">
+          <thead className="table-secondary">
+            <tr>
+              <th>ID</th>
+              <th>Evento</th>
+              <th>Categoría</th>
+              <th>Aforo</th>
+              <th>Precio</th>
+              <th>Estado</th>
+              <th className="text-center">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {productos.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="text-center text-muted py-4">
+                  No hay productos registrados en el catálogo.
+                </td>
+              </tr>
+            ) : (
+              productos.map((prod) => (
+                <tr key={prod.id}>
+                  <td><small className="text-muted">#{prod.id}</small></td>
+                  <td className="fw-bold">{prod.titulo}</td>
+                  <td>
+                    <span className="badge bg-light text-dark border">
+                      {prod.categoria}
+                    </span>
+                  </td>
+                  <td>{prod.aforo}</td>
+                  <td className="fw-bold text-success">
+                    ${Number(prod.precio).toLocaleString('es-CL')}
+                  </td>
+                  <td>
+                    {prod.oferta ? (
+                      <span className="badge bg-danger">🔥 Oferta</span>
+                    ) : (
+                      <span className="badge bg-secondary">Normal</span>
+                    )}
+                  </td>
+                  <td className="text-center">
+                    <button 
+                      className="btn btn-sm btn-outline-danger"
+                      onClick={() => onEliminarProducto(prod.id, prod.titulo)}
+                      title="Eliminar evento"
+                    >
+                      🗑️ Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+export default AdminTablaProductos;
 
 --------------------------------------------------------------------------------
 
@@ -680,6 +1121,429 @@ document.addEventListener('DOMContentLoaded', function() {
 --------------------------------------------------------------------------------
 
 ================================================================================
+ARCHIVO: dspecial-react\src\pages\Admin.jsx
+================================================================================
+
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import AdminStats from '../components/AdminStats';
+import AdminFormProducto from '../components/AdminFormProducto';
+import AdminTablaProductos from '../components/AdminTablaProductos';
+import AdminBitacora from '../components/AdminBitacora';
+
+function Admin({ usuario, productos, setProductos, ventas, historial, registrarActividad }) {
+  const navigate = useNavigate();
+
+  // Si no está logueado como Admin
+  if (!usuario || usuario.rol !== 'admin') {
+    return (
+      <div className="container text-center py-5">
+        <div className="alert alert-danger shadow-sm d-inline-block p-4">
+          <h4>🚫 Acceso Restringido</h4>
+          <p className="mb-3">Necesitas iniciar sesión con cuenta de Administrador.</p>
+          <button className="btn btn-dark" onClick={() => navigate('/login')}>
+            Ir a Iniciar Sesión
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Métricas
+  const totalRecaudado = ventas.reduce((acc, v) => acc + Number(v.monto || 0), 0);
+
+  // Manejo de acciones
+  const handleAgregarProducto = (nuevoProd) => {
+    setProductos([nuevoProd, ...productos]);
+    registrarActividad(`Admin agregó el producto: "${nuevoProd.titulo}" ($${nuevoProd.precio})`, 'admin');
+    alert('¡Producto agregado exitosamente!');
+  };
+
+  const handleEliminarProducto = (id, titulo) => {
+    if (window.confirm(`¿Seguro que deseas eliminar "${titulo}"?`)) {
+      setProductos(productos.filter(p => p.id !== id));
+      registrarActividad(`Admin eliminó el producto: "${titulo}"`, 'admin');
+    }
+  };
+
+  return (
+    <main className="container py-4">
+      {/* Encabezado */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 className="fw-bold mb-0">⚙️ Dashboard Administrativo</h2>
+          <small className="text-muted">Gestión interactiva de catálogo y métricas</small>
+        </div>
+        <span className="badge bg-dark fs-6 px-3 py-2">
+          👤 {usuario.nombre} ({usuario.rol})
+        </span>
+      </div>
+
+      {/* 1. Métricas / KPIs */}
+      <AdminStats 
+        totalRecaudado={totalRecaudado} 
+        totalProductos={productos.length} 
+        totalVentas={ventas.length} 
+      />
+
+      {/* 2. Formulario Agregar Producto */}
+      <AdminFormProducto onAgregarProducto={handleAgregarProducto} />
+
+      {/* 3. Tabla de Productos */}
+      <AdminTablaProductos 
+        productos={productos} 
+        onEliminarProducto={handleEliminarProducto} 
+      />
+
+      {/* 4. Bitácora de Registro */}
+      <AdminBitacora historial={historial} />
+    </main>
+  );
+}
+
+export default Admin;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\Checkout.jsx
+================================================================================
+
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+
+function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usuario }) {
+  const navigate = useNavigate();
+
+  // 1. Estados del flujo de pago
+  const [paso, setPaso] = useState('formulario'); // 'formulario' | 'procesando' | 'exito'
+  const [metodoPago, setMetodoPago] = useState('tarjeta'); // 'tarjeta' | 'transferencia'
+
+  // 2. Estados del formulario
+  const [banco, setBanco] = useState('Banco de Chile');
+  const [numeroTarjeta, setNumeroTarjeta] = useState('4500 1234 5678 9010');
+  const [nombreTitular, setNombreTitular] = useState(usuario ? usuario.nombre : 'Juan Pérez');
+  const [vencimiento, setVencimiento] = useState('12/28');
+  const [cvv, setCvv] = useState('123');
+  const [cuotas, setCuotas] = useState('1');
+
+  // 3. Estado para guardar el comprobante final
+  const [comprobante, setComprobante] = useState(null);
+
+  // Cálculo del total a pagar
+  const totalPagar = carrito.reduce((suma, item) => suma + Number(item.precio || 0), 0);
+
+  // Validación si el carrito está vacío al ingresar
+  if (carrito.length === 0 && paso !== 'exito') {
+    return (
+      <div className="container text-center py-5">
+        <div className="alert alert-warning shadow-sm d-inline-block p-4">
+          <h4>🛒 Tu carrito está vacío</h4>
+          <p className="mb-3">Agrega eventos desde nuestro catálogo para continuar con el pago.</p>
+          <Link to="/catalogo" className="btn btn-dark">
+            ← Ir al Catálogo
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Simulación de procesamiento de pago
+  const handlePagar = (e) => {
+    e.preventDefault();
+    setPaso('procesando');
+
+    // Simula 2.5 segundos de espera bancaria
+    setTimeout(() => {
+      const idVenta = `V-${Math.floor(1000 + Math.random() * 9000)}`;
+      const nuevaVenta = {
+        id: idVenta,
+        cliente: usuario ? usuario.nombre : nombreTitular,
+        evento: carrito.map((item) => item.titulo).join(', '),
+        monto: totalPagar,
+        fecha: new Date().toLocaleDateString('es-CL'),
+        estado: 'Completado',
+        banco: banco,
+        tarjeta: metodoPago === 'tarjeta' ? `Tarjeta **** ${numeroTarjeta.slice(-4)}` : 'Transferencia'
+      };
+
+      // Guardar venta en el estado global para el Admin
+      setVentas((prev) => [nuevaVenta, ...prev]);
+
+      // Registrar en la Bitácora
+      registrarActividad(
+        `Compra procesada #${idVenta} por $${totalPagar.toLocaleString('es-CL')} (${banco})`,
+        usuario ? usuario.rol : 'cliente'
+      );
+
+      // Guardar datos del comprobante, vaciar carrito y cambiar de vista
+      setComprobante(nuevaVenta);
+      setCarrito([]);
+      setPaso('exito');
+    }, 2500);
+  };
+
+  return (
+    <main className="container py-4" style={{ maxWidth: '900px' }}>
+      
+      {/* ---------------- VISTA 1: FORMULARIO DE PAGO ---------------- */}
+      {paso === 'formulario' && (
+        <div className="row g-4">
+          
+          {/* Columna Izquierda: Formulario e Datos */}
+          <div className="col-12 col-md-7">
+            <div className="card shadow-sm border-0">
+              <div className="card-header bg-dark text-white fw-bold py-3">
+                💳 Pasarela de Pago Segura (Ficticia)
+              </div>
+              <div className="card-body p-4">
+                
+                {/* Selector de Método de Pago */}
+                <div className="btn-group w-100 mb-4" role="group">
+                  <button
+                    type="button"
+                    className={`btn ${metodoPago === 'tarjeta' ? 'btn-dark' : 'btn-outline-dark'}`}
+                    onClick={() => setMetodoPago('tarjeta')}
+                  >
+                    💳 Crédito / Débito
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn ${metodoPago === 'transferencia' ? 'btn-dark' : 'btn-outline-dark'}`}
+                    onClick={() => setMetodoPago('transferencia')}
+                  >
+                    🏦 Transferencia
+                  </button>
+                </div>
+
+                <form onSubmit={handlePagar}>
+                  {/* Selección de Banco */}
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">Selecciona tu Banco</label>
+                    <select 
+                      className="form-select" 
+                      value={banco} 
+                      onChange={(e) => setBanco(e.target.value)}
+                    >
+                      <option value="Banco de Chile">Banco de Chile</option>
+                      <option value="BancoEstado">BancoEstado / RUT</option>
+                      <option value="Banco Santander">Banco Santander</option>
+                      <option value="BCI">BCI</option>
+                      <option value="Scotiabank">Scotiabank</option>
+                    </select>
+                  </div>
+
+                  {metodoPago === 'tarjeta' ? (
+                    <>
+                      {/* Vista Previa Visual de Tarjeta */}
+                      <div className="card bg-secondary text-white p-3 mb-3 shadow-sm rounded-3">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <span className="fw-bold fs-5">{banco}</span>
+                          <span className="badge bg-warning text-dark">VISA / MC</span>
+                        </div>
+                        <div className="fs-5 font-monospace mb-2">
+                          {numeroTarjeta || '**** **** **** ****'}
+                        </div>
+                        <div className="d-flex justify-content-between align-items-center text-uppercase fs-7">
+                          <span>{nombreTitular || 'NOMBRE TITULAR'}</span>
+                          <span>EXP: {vencimiento || 'MM/AA'}</span>
+                        </div>
+                      </div>
+
+                      {/* Formulario Tarjeta */}
+                      <div className="mb-3">
+                        <label className="form-label fw-bold">Número de Tarjeta</label>
+                        <input 
+                          type="text" 
+                          className="form-control" 
+                          placeholder="4500 0000 0000 0000"
+                          maxLength="19"
+                          value={numeroTarjeta}
+                          onChange={(e) => setNumeroTarjeta(e.target.value)}
+                          required 
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <label className="form-label fw-bold">Nombre del Titular</label>
+                        <input 
+                          type="text" 
+                          className="form-control" 
+                          placeholder="Juan Pérez"
+                          value={nombreTitular}
+                          onChange={(e) => setNombreTitular(e.target.value)}
+                          required 
+                        />
+                      </div>
+
+                      <div className="row g-2 mb-3">
+                        <div className="col-6">
+                          <label className="form-label fw-bold">Vencimiento</label>
+                          <input 
+                            type="text" 
+                            className="form-control" 
+                            placeholder="MM/AA"
+                            maxLength="5"
+                            value={vencimiento}
+                            onChange={(e) => setVencimiento(e.target.value)}
+                            required 
+                          />
+                        </div>
+                        <div className="col-6">
+                          <label className="form-label fw-bold">CVV</label>
+                          <input 
+                            type="password" 
+                            className="form-control" 
+                            placeholder="123"
+                            maxLength="4"
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value)}
+                            required 
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="form-label fw-bold">Cuotas</label>
+                        <select 
+                          className="form-select" 
+                          value={cuotas} 
+                          onChange={(e) => setCuotas(e.target.value)}
+                        >
+                          <option value="1">1 Cuota (${totalPagar.toLocaleString('es-CL')})</option>
+                          <option value="3">3 Cuotas sin interés (${Math.round(totalPagar / 3).toLocaleString('es-CL')}/mes)</option>
+                          <option value="6">6 Cuotas sin interés (${Math.round(totalPagar / 6).toLocaleString('es-CL')}/mes)</option>
+                        </select>
+                      </div>
+                    </>
+                  ) : (
+                    /* Vista de Transferencia */
+                    <div className="alert alert-info border-0 p-3 mb-4">
+                      <h6>📌 Datos para Transferencia Bancaria:</h6>
+                      <ul className="mb-0 small">
+                        <li><strong>Razón Social:</strong> Tu Día Especial SpA</li>
+                        <li><strong>RUT:</strong> 76.543.210-K</li>
+                        <li><strong>Banco:</strong> {banco}</li>
+                        <li><strong>Cuenta Corriente:</strong> 00-12345-09</li>
+                        <li><strong>Correo:</strong> pagos@tudia.cl</li>
+                      </ul>
+                    </div>
+                  )}
+
+                  <button type="submit" className="btn btn-danger w-100 py-3 fw-bold fs-5">
+                    Pagar ${totalPagar.toLocaleString('es-CL')}
+                  </button>
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+          {/* Columna Derecha: Resumen del Pedido */}
+          <div className="col-12 col-md-5">
+            <div className="card shadow-sm border-0">
+              <div className="card-header bg-secondary text-white fw-bold py-3">
+                📋 Resumen de la Reserva
+              </div>
+              <div className="card-body">
+                {carrito.map((item, index) => (
+                  <div key={index} className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <div>
+                      <h6 className="mb-0 fw-bold">{item.titulo}</h6>
+                      <small className="text-muted">{item.aforo}</small>
+                    </div>
+                    <span className="fw-bold">${Number(item.precio).toLocaleString('es-CL')}</span>
+                  </div>
+                ))}
+
+                <div className="d-flex justify-content-between align-items-center fs-5 fw-bold mt-3 pt-2">
+                  <span>Total:</span>
+                  <span className="text-danger">${totalPagar.toLocaleString('es-CL')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* ---------------- VISTA 2: PROCESANDO (ANIMACIÓN BOOTSTRAP) ---------------- */}
+      {paso === 'procesando' && (
+        <div className="text-center py-5 my-5">
+          <div className="spinner-border text-danger" style={{ width: '4rem', height: '4rem' }} role="status">
+            <span className="visually-hidden">Procesando...</span>
+          </div>
+          <h4 className="mt-4 fw-bold">Procesando pago con {banco}...</h4>
+          <p className="text-muted">Por favor no cierres ni recargues la página.</p>
+        </div>
+      )}
+
+      {/* ---------------- VISTA 3: COMPROBANTE DE ÉXITO ---------------- */}
+      {paso === 'exito' && comprobante && (
+        <div className="card shadow border-0 mx-auto" style={{ maxWidth: '600px' }}>
+          <div className="card-header bg-success text-white text-center py-4">
+            <div className="fs-1">🎉</div>
+            <h3 className="fw-bold mb-0">¡Pago Confirmado!</h3>
+            <small>Reserva agendada exitosamente</small>
+          </div>
+
+          <div className="card-body p-4">
+            <div className="alert alert-light border text-center mb-4">
+              <span className="text-muted d-block">Número de Comprobante</span>
+              <strong className="fs-4 text-dark">{comprobante.id}</strong>
+            </div>
+
+            <table className="table table-borderless">
+              <tbody>
+                <tr>
+                  <td className="text-muted">Cliente:</td>
+                  <td className="fw-bold text-end">{comprobante.cliente}</td>
+                </tr>
+                <tr>
+                  <td className="text-muted">Eventos Reservados:</td>
+                  <td className="fw-bold text-end">{comprobante.evento}</td>
+                </tr>
+                <tr>
+                  <td className="text-muted">Banco:</td>
+                  <td className="fw-bold text-end">{comprobante.banco}</td>
+                </tr>
+                <tr>
+                  <td className="text-muted">Medio de Pago:</td>
+                  <td className="fw-bold text-end">{comprobante.tarjeta}</td>
+                </tr>
+                <tr>
+                  <td className="text-muted">Fecha:</td>
+                  <td className="fw-bold text-end">{comprobante.fecha}</td>
+                </tr>
+                <tr className="border-top">
+                  <td className="fs-5 fw-bold">Monto Pagado:</td>
+                  <td className="fs-5 fw-bold text-end text-success">${comprobante.monto.toLocaleString('es-CL')}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div className="d-grid gap-2 mt-4">
+              <button className="btn btn-dark" onClick={() => navigate('/admin')}>
+                ⚙️ Ver Venta en el Dashboard Admin
+              </button>
+              <button className="btn btn-outline-secondary" onClick={() => navigate('/')}>
+                🏠 Volver al Inicio
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </main>
+  );
+}
+
+export default Checkout;
+
+--------------------------------------------------------------------------------
+
+================================================================================
 ARCHIVO: dspecial-react\src\pages\Contacto.jsx
 ================================================================================
 
@@ -1049,11 +1913,12 @@ ARCHIVO: dspecial-react\src\pages\carrito.jsx
 ================================================================================
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Boton from '../components/Boton';
 import '../css/catalogo.css';
 
 function Carrito({ carrito = [], setCarrito }) {
+    const navigate = useNavigate();
     const cantidadEventos = carrito.length;
     const totalPagar = carrito.reduce((suma, evento) => suma + Number(evento.precio || 0), 0);
 
@@ -1074,7 +1939,7 @@ function Carrito({ carrito = [], setCarrito }) {
             <div className="contenedor-carrito">
                 <div className="lista-carrito">
                     {carrito.length === 0 ? (
-                        <p>No tienes eventos en tu carrito aún.</p>
+                        <p className="carrito-vacio-msg">No tienes eventos en tu carrito aún.</p>
                     ) : (
                         carrito.map((item, index) => (
                             <div key={index} className="item-carrito" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
@@ -1103,9 +1968,14 @@ function Carrito({ carrito = [], setCarrito }) {
                         <strong>${totalPagar.toLocaleString('es-CL')}</strong>
                     </div>
                     
-                    <Boton className="btn-pagar" onClick={() => alert('¡Gracias por tu reserva!')}>
+                    {/* Redirección al checkout */}
+                    <button 
+                        className="btn-pagar" 
+                        disabled={carrito.length === 0}
+                        onClick={() => navigate('/checkout')}
+                    >
                         Proceder al Pago
-                    </Boton>
+                    </button>
                     
                     <Boton className="btn-vaciar" onClick={handleVaciar}>
                         Vaciar Carrito
@@ -1130,38 +2000,20 @@ ARCHIVO: dspecial-react\src\pages\catalogo.jsx
 
 import React, { useState } from 'react';
 import TarjetaEvento from '../components/TarjetaEvento';
-import FiltroCatalogo from '../components/FiltroCatalogo'; // Importamos el filtro
+import FiltroCatalogo from '../components/FiltroCatalogo';
 import '../css/estilo.css';
 import '../css/catalogo.css';
 
-function Catalogo({ agregarAlCarrito }) {
-    // Estados para controlar la búsqueda y la categoría seleccionada
+function Catalogo({ productos = [], agregarAlCarrito }) {
     const [busqueda, setBusqueda] = useState('');
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todas');
 
-    // Lista de eventos con su categoría asignada
-    const eventos = [
-        { id: 1, titulo: "Boda al aire libre", categoria: "matrimonios", aforo: "Aforo: 50 personas", precio: 150000, imagen: "/img/boda-catalgo.jpg", oferta: false },
-        { id: 2, titulo: "Cumpleaños Temático", categoria: "cumpleanos", aforo: "Aforo: 30 personas", precio: 80000, precioAnterior: 100000, imagen: "/img/cumple-catalogo.jpg", oferta: true },
-        { id: 3, titulo: "Evento Corporativo", categoria: "corporativos", aforo: "Aforo: 100 personas", precio: 250000, imagen: "/img/corporativo-catalogo.jpg", oferta: false },
-        { id: 4, titulo: "Fiesta de Graduación", categoria: "corporativos", aforo: "Aforo: 80 personas", precio: 180000, precioAnterior: 220000, imagen: "/img/graduacion-catalogo.jpg", oferta: true },
-        { id: 5, titulo: "Baby Shower Especial", categoria: "cumpleanos", aforo: "Aforo: 25 personas", precio: 60000, imagen: "/img/babyshower-catalogo.jpg", oferta: false },
-        { id: 6, titulo: "Aniversario de Bodas", categoria: "matrimonios", aforo: "Aforo: 40 personas", precio: 120000, imagen: "/img/aniversario-catalogo.jpg", oferta: false },
-        { id: 7, titulo: "Bautizo Familiar", categoria: "cumpleanos", aforo: "Aforo: 35 personas", precio: 90000, imagen: "/img/bautizo-catalogo.jpg", oferta: false },
-        { id: 8, titulo: "Fiesta de Gala", categoria: "corporativos", aforo: "Aforo: 120 personas", precio: 300000, imagen: "/img/gala-catalogo.jpg", oferta: false },
-        { id: 9, titulo: "Cena Romántica", categoria: "matrimonios", aforo: "Aforo: 2 personas", precio: 70000, precioAnterior: 90000, imagen: "/img/cenaromantica-catalogo.jpg", oferta: true },
-        { id: 10, titulo: "Despedida de Soltero/a", categoria: "cumpleanos", aforo: "Aforo: 20 personas", precio: 110000, imagen: "/img/despedida-catalogo.jpg", oferta: false }
-    ];
-
-    // Lógica para filtrar eventos
-    const eventosFiltrados = eventos.filter((evento) => {
-        // Coincidencia por categoría u ofertas
+    const eventosFiltrados = productos.filter((evento) => {
         const coincideCategoria = 
             categoriaSeleccionada === 'todas' ||
             (categoriaSeleccionada === 'ofertas' && evento.oferta) ||
             evento.categoria === categoriaSeleccionada;
 
-        // Coincidencia por texto ingresado
         const coincideBusqueda = evento.titulo
             .toLowerCase()
             .includes(busqueda.toLowerCase());
@@ -1173,7 +2025,6 @@ function Catalogo({ agregarAlCarrito }) {
         <main className="main-catalogo">
             <h2 className="titulo-seccion">Nuestros Eventos</h2>
 
-            {/* Componente de Filtro */}
             <FiltroCatalogo 
                 busqueda={busqueda} 
                 setBusqueda={setBusqueda} 
@@ -1181,10 +2032,9 @@ function Catalogo({ agregarAlCarrito }) {
                 setCategoriaSeleccionada={setCategoriaSeleccionada} 
             />
 
-            {/* Lista filtrada en tiempo real */}
             <div className="grilla-catalogo">
                 {eventosFiltrados.length === 0 ? (
-                    <p>
+                    <p style={{ textAlign: 'center', width: '100%', padding: '30px' }}>
                         🔍 No se encontraron eventos que coincidan con tu búsqueda.
                     </p>
                 ) : (

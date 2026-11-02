@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Boton from '../components/Boton';
 import '../css/catalogo.css';
 
 function Carrito({ carrito = [], setCarrito }) {
+    const navigate = useNavigate();
     const cantidadEventos = carrito.length;
     const totalPagar = carrito.reduce((suma, evento) => suma + Number(evento.precio || 0), 0);
 
@@ -24,7 +25,7 @@ function Carrito({ carrito = [], setCarrito }) {
             <div className="contenedor-carrito">
                 <div className="lista-carrito">
                     {carrito.length === 0 ? (
-                        <p>No tienes eventos en tu carrito aún.</p>
+                        <p className="carrito-vacio-msg">No tienes eventos en tu carrito aún.</p>
                     ) : (
                         carrito.map((item, index) => (
                             <div key={index} className="item-carrito" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
@@ -53,9 +54,14 @@ function Carrito({ carrito = [], setCarrito }) {
                         <strong>${totalPagar.toLocaleString('es-CL')}</strong>
                     </div>
                     
-                    <Boton className="btn-pagar" onClick={() => alert('¡Gracias por tu reserva!')}>
+                    {/* Redirección al checkout */}
+                    <button 
+                        className="btn-pagar" 
+                        disabled={carrito.length === 0}
+                        onClick={() => navigate('/checkout')}
+                    >
                         Proceder al Pago
-                    </Boton>
+                    </button>
                     
                     <Boton className="btn-vaciar" onClick={handleVaciar}>
                         Vaciar Carrito
