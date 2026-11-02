@@ -1,13 +1,11 @@
-/* Contenedor principal del header. Uso Flexbox para alinear los elementos (lupa, logo, usuario) en una sola fila horizontal */
+/* Contenedor principal del header */
 .inicio-cabecilla {
     width: 100%;
     min-height: 85px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 12px 35px;
-
     background-color: #f5f0e6;
     border-bottom: 1px solid #ded6ca;
 }
@@ -17,7 +15,6 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-
     width: 180px;
 }
 
@@ -29,32 +26,69 @@
 }
 
 /* Contenedores para los iconos de los extremos (usuario y búsqueda) */
-/* Iconos */
-.icono-buscar,
 .icono-usuario {
-    width: 40px;
+    min-width: 40px; /* Cambiado a min-width para expandirse con el texto del usuario */
     height: 40px;
-
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.icono-buscar img,
 .icono-usuario img {
     width: 28px;
     height: 28px;
     object-fit: contain;
-
     mix-blend-mode: multiply;
-}
-
-.icono-buscar img,
-.icono-usuario img {
     transition: transform 0.2s ease;
 }
 
-.icono-buscar img:hover,
 .icono-usuario img:hover {
     transform: scale(1.1);
+}
+
+/* --- ESTILOS USUARIOS EN CABECERA --- */
+.usuario-logueado-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #2a434d;
+    padding: 6px 14px;
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.link-perfil-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff !important;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.avatar-mini {
+    font-size: 1rem;
+}
+
+.nombre-usuario-header {
+    color: #ffffff !important;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-logout-mini {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 2px 4px;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+.btn-logout-mini:hover {
+    transform: scale(1.2);
 }

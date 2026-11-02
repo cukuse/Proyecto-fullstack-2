@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Boton from '../components/boton';
+import Boton from '../components/Boton';
 import '../css/catalogo.css';
 
 function Carrito({ carrito = [], setCarrito }) {

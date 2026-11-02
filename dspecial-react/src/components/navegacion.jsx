@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import Boton from './boton';
-import BotonCarrito from './botonCarrito';
+import Boton from './Boton';
+import BotonCarrito from './BotonCarrito';
 import React from 'react';
 
 function Navegacion({totalItems}) {
@@ -19,7 +19,7 @@ function Navegacion({totalItems}) {
         <Link to="/Nosotros">
             <Boton className="btn-n">¿Quienes Somos?</Boton>
         </Link>
-        <Link to="/blog">
+        <Link to="/Blog">
             <Boton className="btn-n">Blog</Boton>
         </Link>
         

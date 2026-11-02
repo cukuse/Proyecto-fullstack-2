@@ -1,5 +1,5 @@
 import React from 'react';
-import Boton from './boton';
+import Boton from './Boton';
 
 function TarjetaEvento({ evento, agregarAlCarrito }) {
     return (

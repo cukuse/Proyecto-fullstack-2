@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Boton from "./boton";
+import Boton from "./Boton";
 
 function BotonCarrito({ totalItems = 0 }) {
     return (

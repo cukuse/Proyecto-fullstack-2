@@ -1,0 +1,1668 @@
+================================================================================
+ COMPILACIÓN: ARCHIVOS JSX / JS
+================================================================================
+
+================================================================================
+ARCHIVO: dspecial-react\eslint.config.js
+================================================================================
+
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+  },
+])
+
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\vite.config.js
+================================================================================
+
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    enviromment: 'jsdom',
+    setupFiles: './src/setupTests.js',
+  },
+})
+
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\App.jsx
+================================================================================
+
+import { useEffect, useState } from 'react'
+import { Routes, Route } from 'react-router-dom'
+
+import Pie from './components/footer'
+import Home from './pages/Home'
+import Contacto from './pages/Contacto'
+import Nosotros from './pages/Nosotros'
+import Catalogo from './pages/catalogo'
+import Carrito from './pages/carrito'
+import Blog from './pages/blog'
+import Login from './pages/Login'   
+
+import Cabecera from './components/cabecera'
+import Navegacion from './components/navegacion'
+
+function App() {
+  //  Estado del Carrito
+  const [carrito, setCarrito] = useState(() => {
+    const guardado = localStorage.getItem('carrito_tu_dia');
+    return guardado ? JSON.parse(guardado) : [];
+  });
+
+  // Estado del Usuario 
+  const [usuario, setUsuario] = useState(() => {
+    const usuarioGuardado = localStorage.getItem('usuario_tu_dia');
+    return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('carrito_tu_dia', JSON.stringify(carrito));
+  }, [carrito]);
+
+  useEffect(() => {
+    if (usuario) {
+      localStorage.setItem('usuario_tu_dia', JSON.stringify(usuario));
+    } else {
+      localStorage.removeItem('usuario_tu_dia');
+    }
+  }, [usuario]);
+
+  const agregarAlCarrito = (producto) => {
+    setCarrito([...carrito, producto]);
+  };
+
+  // Funciones de Sesión
+  const loginUsuario = (datosUsuario) => {
+    setUsuario(datosUsuario);
+  };
+
+  const logoutUsuario = () => {
+    setUsuario(null);
+  };
+
+  return (
+    <>
+      <Cabecera usuario={usuario} logout={logoutUsuario} />
+      <Navegacion totalItems={carrito.length} usuario={usuario} />
+
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/contacto' element={<Contacto />} />
+        <Route path='/Nosotros' element={<Nosotros />} />
+        <Route path='/catalogo' element={<Catalogo agregarAlCarrito={agregarAlCarrito} />} />
+        <Route path='/carrito' element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
+        <Route path='/Blog' element={<Blog />} />
+        
+        <Route 
+          path='/login' 
+          element={<Login usuario={usuario} login={loginUsuario} logout={logoutUsuario} />} 
+        />
+      </Routes>
+
+      <Pie />
+    </>
+  )
+}
+
+export default App
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\main.jsx
+================================================================================
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+// import './index.css'
+import App from './App.jsx'
+import {BrowserRouter} from 'react-router-dom'
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <BrowserRouter>
+      <App/>
+    </BrowserRouter>
+    
+  </StrictMode>,
+)
+
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\setupTests.js
+================================================================================
+
+import '@testing-library/jest-dom';
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\Boton.jsx
+================================================================================
+
+import '../css/estilo.css';
+
+function Boton({children, onClick}) {
+    return (
+        <>
+        <button onClick={onClick} className='btn-n'>
+            {children}
+        </button>
+        </>
+    )
+        
+    
+}
+export default Boton
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\BotonCarrito.jsx
+================================================================================
+
+import React from "react";
+import { Link } from "react-router-dom";
+import Boton from "./Boton";
+
+function BotonCarrito({ totalItems = 0 }) {
+    return (
+        <Link to="/carrito">
+            <Boton className="btn-carrito">
+                🛒 Carrito ({totalItems})
+            </Boton>
+        </Link>
+    );
+}
+
+export default BotonCarrito;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\Cabecera.jsx
+================================================================================
+
+import { Link } from 'react-router-dom';
+import "../css/header.css";
+
+function Cabecera({ usuario, logout }) {
+    return (
+        <header className="inicio-cabecilla">
+            <div className="logo">
+                <Link to="/">
+                    <img src="/img/logo2.png" alt="Logo"/>
+                </Link> 
+            </div>
+            
+            <div className="icono-usuario">
+                {usuario ? (
+                    <div className="usuario-logueado-header">
+                        <Link to="/login" className="link-perfil-header">
+                            <span className="avatar-mini">👤</span>
+                            <span className="nombre-usuario-header">{usuario.nombre}</span>
+                        </Link>
+                        
+                        <button 
+                            onClick={logout} 
+                            className="btn-logout-mini"
+                            title="Cerrar sesión"
+                        >
+                            🚪
+                        </button>
+                    </div>
+                ) : (
+                    <Link to="/login">
+                        <img src="/img/icono-usuario.png" alt="Usuario"/>
+                    </Link>
+                )}
+            </div>
+        </header> 
+    );
+}
+
+export default Cabecera;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\FiltroCatalogo.jsx
+================================================================================
+
+import React from 'react';
+
+function FiltroCatalogo({ 
+    busqueda, 
+    setBusqueda, 
+    categoriaSeleccionada, 
+    setCategoriaSeleccionada 
+}) {
+    // Lista de categorías para los botones
+    const categorias = [
+        { id: 'todas', label: 'Todos' },
+        { id: 'matrimonios', label: '💍 Matrimonios' },
+        { id: 'cumpleanos', label: '🎂 Cumpleaños' },
+        { id: 'corporativos', label: '💼 Corporativos' },
+        { id: 'ofertas', label: '🔥 Solo Ofertas', esOferta: true }
+    ];
+
+    return (
+        <section className="contenedor-filtros">
+            <form className="barra-filtros" onSubmit={(e) => e.preventDefault()}>
+                
+                {/* 1. Caja de búsqueda por texto */}
+                <div className="caja-busqueda">
+                    <span className="icono-lupa">🔍</span>
+                    <input 
+                        type="text" 
+                        placeholder="Buscar evento por nombre..." 
+                        className="input-buscar"
+                        value={busqueda}
+                        onChange={(e) => setBusqueda(e.target.value)}
+                    />
+                </div>
+
+                {/* 2. Botones de categorías (Chips) */}
+                <div className="categorias-chips">
+                    {categorias.map((cat) => (
+                        <button
+                            key={cat.id}
+                            type="button"
+                            className={`btn-chip ${cat.esOferta ? 'chip-oferta' : ''} ${categoriaSeleccionada === cat.id ? 'active' : ''}`.trim()}
+                            onClick={() => setCategoriaSeleccionada(cat.id)}
+                        >
+                            {cat.label}
+                        </button>
+                    ))}
+                </div>
+            </form>
+        </section>
+    );
+}
+
+export default FiltroCatalogo;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\TarjetaEvento.jsx
+================================================================================
+
+import React from 'react';
+import Boton from './Boton';
+
+function TarjetaEvento({ evento, agregarAlCarrito }) {
+    return (
+        <div className={`tarjeta-evento ${evento.oferta ? 'oferta' : ''}`}>
+            {evento.oferta && <span className="insignia-oferta">🔥 OFERTA</span>}
+
+
+            <div className="imagen-placeholder">
+                <img src={evento.imagen} alt={evento.titulo} />
+            </div>
+
+            <h3>{evento.titulo}</h3>
+            <p>{evento.aforo}</p>
+
+
+            <p className="contenedor-precio">
+                {evento.precioAnterior && (
+                    <span className="precio-anterior">
+                        ${evento.precioAnterior.toLocaleString('es-CL')}
+                    </span>
+                )}
+                <span className="precio-evento">
+                    ${evento.precio.toLocaleString('es-CL')}
+                </span>
+            </p>
+
+
+            <Boton onClick={() => agregarAlCarrito(evento)}>
+                Agregar al Carrito
+            </Boton>
+        </div>
+    );
+}
+
+export default TarjetaEvento;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\footer.jsx
+================================================================================
+
+import '../css/estilo.css'
+
+function Pie() {
+
+
+    return (
+<>
+    <footer>
+    <div className="redes-sociales">
+        <a href="https://www.instagram.com/smookekl.dlfr/">
+        <p>📷 @diasespecial</p>
+        </a>
+        <p>📘 @diasespecial</p>
+    </div>
+    <div className="info-pag">
+        <p>Copyright Tu Día Feliz - 2026. Todos los derechos reservados</p>
+        <p>Defensa de las y los consumidores. Para reclamos ingresa aquí</p>
+        <p>Botón de arrepentimiento</p>
+    </div>
+    </footer>
+</>)
+}
+
+export default Pie;
+
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\formulario.jsx
+================================================================================
+
+import { useState } from "react"
+
+function Formulario() {
+    const [nombre, setNombre] = useState ("")
+    const [Correo, setCorreo] =useState ("")
+    const [mensaje, setMensaje] =useState ("")
+    const [formlario, setFormulario]= useState("")
+
+
+
+    function cambioFormulario(e) {
+        setFormulario
+        return
+        
+    }
+    function CambioNombre(e){
+        setNombre(e.target.value)
+
+        
+    }
+
+    function cambioCorreo(e) {
+        setCorreo(e.target.value)
+        
+    }
+
+    function cambioMensaje(e) {
+        setMensaje(e.target.value)
+        
+    }
+
+    function Envio(e) {
+        e.preventDefault()
+        if(nombre.length<1 ){
+            alert("su nombre no puede quedar en blanco")
+            return
+        }
+        if (mensaje.length<1) {
+            alert ("el mensaje debe ser mas largo y un buen contexto")
+            return
+        }
+        alert("su mensaje se ha mandado de forma correcta")
+        
+    }
+
+    return (
+        <>
+         <form action="" onSubmit={Envio}>
+            <label htmlFor="">Nombre Completo</label>
+            <input type="text" name="" id="" value={nombre} onChange={CambioNombre}/>
+            <label htmlFor="">Correo Electronico</label>
+            <input type="email" name="" id="" value={Correo} onChange={cambioCorreo}/>
+            <label htmlFor="">tipo solicitud</label>
+            <select name="" value={formlario} onChange={cambioFormulario}>
+                <option >Cotización de Evento Privado</option>
+                <option >Consulta sobre Aforos y Disponibilidad</option>
+                <option >Personalización y Detalles Extras</option>
+                <option >Modificación / Cambio de Fecha</option>
+                <option >Consulta de Catálogo de Servicios</option>
+                <option >Sugerencias o Reclamos</option>
+
+            </select>
+            <label htmlFor="">Mensaje </label>
+            <input type="text" name="" id="" value={mensaje} onChange={cambioMensaje}/>
+            <input type="submit" value="Enviar" />
+         </form>
+        </>
+    )
+    
+}
+
+export default Formulario
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\navegacion.jsx
+================================================================================
+
+import { Link } from 'react-router-dom';
+import Boton from './Boton';
+import BotonCarrito from './BotonCarrito';
+import React from 'react';
+
+function Navegacion({totalItems}) {
+    return (
+        <>
+        <nav>
+        <Link to="/">
+            <Boton  className="btn-n">Inicio</Boton>
+        </Link>
+        <Link to="/catalogo">
+            <Boton className="btn-n">Catalogo De Eventos</Boton>
+        </Link>
+        <Link to="/contacto">
+            <Boton className="btn-n">Contactanos</Boton>
+        </Link>
+        <Link to="/Nosotros">
+            <Boton className="btn-n">¿Quienes Somos?</Boton>
+        </Link>
+        <Link to="/Blog">
+            <Boton className="btn-n">Blog</Boton>
+        </Link>
+        
+        <BotonCarrito totalItems={totalItems}/>
+        </nav>
+        </>
+    )
+}
+export default Navegacion
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\jss\validacion_evento.js
+================================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const formEvento = document.getElementById('form-evento');
+    
+    if (formEvento) { // Solo se ejecuta si estamos en evento.html
+        formEvento.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
+
+            // 1. Capturar todos los elementos (Incluyendo la nueva fecha)
+            const invitados = document.getElementById('evento-invitados');
+            const telefono = document.getElementById('evento-telefono');
+            const direccion = document.getElementById('evento-direccion');
+            const fecha = document.getElementById('evento-fecha'); // Nuevo
+            
+            const errInvitados = document.getElementById('error-invitados');
+            const errTelefono = document.getElementById('error-telefono');
+            const errDireccion = document.getElementById('error-direccion');
+            const errFecha = document.getElementById('error-fecha'); // Nuevo
+
+            // 2. Limpiar errores anteriores
+            invitados.classList.remove('input-error'); 
+            errInvitados.style.display = 'none';
+            
+            telefono.classList.remove('input-error'); 
+            errTelefono.style.display = 'none';
+            
+            direccion.classList.remove('input-error'); 
+            errDireccion.style.display = 'none';       
+            
+            fecha.classList.remove('input-error'); // Nuevo
+            errFecha.style.display = 'none';       // Nuevo
+
+            // 3. Validar que invitados sea un número mayor a 0
+            if (isNaN(invitados.value) || invitados.value <= 0) {
+                errInvitados.textContent = 'Error: Ingresa una cantidad válida de invitados.';
+                errInvitados.style.display = 'block';
+                invitados.classList.add('input-error');
+                valido = false;
+            }
+
+            // 4. Validar teléfono (+56 9 seguido de 8 números)
+            const regexTelefono = /^\+56\s9\s\d{4}\s\d{4}$/;
+            if (!regexTelefono.test(telefono.value.trim())) {
+                errTelefono.textContent = 'Sugerencia: Usa el formato +56 9 XXXX XXXX';
+                errTelefono.style.display = 'block';
+                telefono.classList.add('input-error');
+                valido = false;
+            }
+
+            // 5. Validar dirección 
+            if (direccion.value.trim() === '') {
+                errDireccion.textContent = 'Error: La dirección del evento es obligatoria.';
+                errDireccion.style.display = 'block';
+                direccion.classList.add('input-error');
+                valido = false;
+            } else if (direccion.value.trim().length < 10) {
+                errDireccion.textContent = 'Sugerencia: Ingresa una dirección más detallada (calle y número).';
+                errDireccion.style.display = 'block';
+                direccion.classList.add('input-error');
+                valido = false;
+            }
+
+            // 6. Validar fecha (El bloque nuevo)
+            if (fecha.value === '') {
+                errFecha.textContent = 'Error: Debes seleccionar una fecha en el calendario.';
+                errFecha.style.display = 'block';
+                fecha.classList.add('input-error');
+                valido = false;
+            }
+
+            // 7. Ejecutar si todo es válido
+            if (valido) {
+                alert('¡Evento agendado con éxito!');
+                formEvento.reset();
+            }
+        });
+    }
+});
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\jss\validaciones_contacto.js
+================================================================================
+
+const formContacto = document.getElementById('form-contacto');
+    if (formContacto) { // Solo se ejecuta si estamos en contacto.html
+        formContacto.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
+
+            const nombre = document.getElementById('contacto-nombre');
+            const mensaje = document.getElementById('contacto-mensaje');
+            const errNombre = document.getElementById('error-nombre');
+            const errMensaje = document.getElementById('error-mensaje');
+
+            nombre.classList.remove('input-error'); errNombre.style.display = 'none';
+            mensaje.classList.remove('input-error'); errMensaje.style.display = 'none';
+
+            // Validar que el nombre solo tenga letras y espacios (Expresión Regular básica)
+            const regexLetras = /^[a-zA-Z\s]+$/;
+            if (!regexLetras.test(nombre.value.trim())) {
+                errNombre.textContent = 'Error: El nombre solo debe contener letras.';
+                errNombre.style.display = 'block';
+                nombre.classList.add('input-error');
+                valido = false;
+            }
+
+            if (mensaje.value.trim().length < 10) {
+                errMensaje.textContent = 'Sugerencia: Por favor, explícanos con más detalle (mínimo 10 caracteres).';
+                errMensaje.style.display = 'block';
+                mensaje.classList.add('input-error');
+                valido = false;
+            }
+
+            if (valido) {
+                alert('¡Mensaje enviado exitosamente!');
+                formContacto.reset(); // Limpia el formulario
+            }
+        });
+        }
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\jss\validaciones_login.js
+================================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const formLogin = document.getElementById('form-login');
+    
+    if (formLogin) { // Solo se ejecuta si estamos en login.html
+        formLogin.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
+
+            const email = document.getElementById('usuario-email');
+            const pass = document.getElementById('usuario-pass');
+            const errEmail = document.getElementById('error-email');
+            const errPass = document.getElementById('error-pass');
+
+            // Limpiar errores
+            email.classList.remove('input-error'); errEmail.style.display = 'none';
+            pass.classList.remove('input-error'); errPass.style.display = 'none';
+
+            if (email.value.trim() === '') {
+                errEmail.textContent = 'Sugerencia: Ingresa tu correo o usuario.';
+                errEmail.style.display = 'block';
+                email.classList.add('input-error');
+                valido = false;
+            }
+
+            if (pass.value.trim().length < 6) {
+                errPass.textContent = 'Sugerencia: La contraseña debe tener al menos 6 caracteres.';
+                errPass.style.display = 'block';
+                pass.classList.add('input-error');
+                valido = false;
+            }
+
+            if (valido) {
+                alert('¡Iniciando sesión!');
+                window.location.href = 'index.html'; 
+            }
+        });
+    } 
+}); 
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\Contacto.jsx
+================================================================================
+
+import '../css/formularios-extra.css'
+import '../css/estilo.css' 
+function Contacto() {
+  return (
+    <>
+      <main className="main-centrado">
+        <h2 className="titulo-seccion">Envíanos un Mensaje</h2>
+        <p className="subtitulo-seccion">
+          ¿Tienes dudas sobre un evento? Escríbenos.
+        </p>
+
+        <form
+          className="caja-formulario"
+          action="#"
+          method="POST"
+          id="form-contacto"
+        >
+          <div className="grupo-input">
+            <label>Nombre Completo</label>
+            <input
+              id="contacto-nombre"
+              type="text"
+              placeholder="Ej: Juan Pérez"
+              required
+            />
+            <p className="mensaje-error" id="error-nombre"></p>
+          </div>
+          <div className="grupo-input">
+            <label>Correo Electrónico</label>
+            <input type="email" placeholder="tu@correo.com" required />
+          </div>
+          <div className="grupo-input">
+            <label>Asunto</label>
+            <select className="input-select">
+              <option>Cotización</option>
+              <option>Reclamo</option>
+              <option>Trabaja con nosotros</option>
+            </select>
+          </div>
+          <div className="grupo-input">
+            <label>Mensaje</label>
+            <textarea
+              id="contacto-mensaje"
+              rows="4"
+              placeholder="Escribe tu consulta aquí..."
+              required
+            ></textarea>
+            <p className="mensaje-error" id="error-mensaje"></p>
+          </div>
+          <button type="submit" className="btn-accion">
+            Enviar Mensaje
+          </button>
+        </form>
+      </main>
+    </>
+  );
+}
+export default Contacto;
+
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\Home.jsx
+================================================================================
+
+import '../css/estilo.css';
+
+function Home() {
+    return (
+        <main>
+            <section className="agrevento-sect">
+                <div className="imagen-inicio"><img src="/img/home 1.jpg" alt=""/></div>
+
+                <a href="/catalogo">
+                    <button id="btn-agregar-evento">Agendar Evento</button>
+                </a>
+            </section>
+            <section className="features">
+                <div>
+                    <div className="icono-a"><img src="/img/icono-a.png" alt=""/></div>
+                    <p><strong>Aforos Pequeños</strong> Eventos Privados y Calidos</p>
+                </div>
+                <div>
+                    <div className="icono-b"><img src="/img/icono-b.png" alt=""/></div>
+                    <p><strong>Planificacion Segura</strong> Agendamiento anticipado Garantizado</p>
+                </div>
+                <div>
+                    <div className="icono-c"><img src="/img/icono-c.png" alt=""/></div>
+                    <p><strong className="sub-1">Detalles Unicos</strong> Personaliza Tu pedido Con Extras y Envios Especiales</p>
+                </div>
+            </section>
+        </main>
+    );
+}
+
+export default Home;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\Login.jsx
+================================================================================
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../css/estilo-login.css';
+
+function Login({ usuario, login, logout }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  if (usuario) {
+    return (
+      <div className="login-page-container">
+        <main className="main-centrado login-card" style={{ padding: '50px 20px', textAlign: 'center' }}>
+          <h2>¡Hola, {usuario.nombre}!</h2>
+          <p style={{ margin: '15px 0' }}>Has iniciado sesión como: <strong>{usuario.rol.toUpperCase()}</strong></p>
+          
+          {usuario.rol === 'admin' && (
+            <button 
+              onClick={() => navigate('/admin')} 
+              className="btn-accion" 
+              style={{ marginBottom: '15px', backgroundColor: '#2a434d' }}
+            >
+              ⚙️ Ir al Dashboard Admin
+            </button>
+          )}
+          
+          <br />
+          <button onClick={logout} className="btn-accion" style={{ backgroundColor: '#d9745f' }}>
+            Cerrar Sesión
+          </button>
+        </main>
+      </div>
+    );
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError('');
+
+    const emailL = email.trim().toLowerCase();
+    const passL = password.trim();
+
+    if (!emailL || !passL) {
+      setError('Por favor ingresa correo y contraseña.');
+      return;
+    }
+
+    if (emailL === 'admin@tudia.cl' && passL === 'admin123') {
+      login({ email: emailL, nombre: 'Administrador', rol: 'admin' });
+      alert('¡Bienvenido!');
+      navigate('/admin');
+    } else {
+      login({ email: emailL, nombre: emailL.split('@')[0], rol: 'cliente' });
+      alert('¡Bienvenido!');
+      navigate('/');
+    }
+  };
+
+  return (
+    <div className="login-page-container">
+      <main className="main-centrado login-card">
+        <div className="cabecilla-login">
+          <div className="icono-login">
+            <img src="/img/logo2.png" alt="Logo Tu Día Especial" style={{ width: '120px' }} />
+          </div>
+        </div>
+
+        <form className="caja-formulario" onSubmit={handleSubmit}>
+          <h2 style={{ color: 'white', textAlign: 'center', marginBottom: '15px' }}>Iniciar Sesión</h2>
+
+          {error && <p style={{ color: '#ff6b6b', fontWeight: 'bold', textAlign: 'center' }}>{error}</p>}
+
+          <div className="grupo-input">
+            <label>Correo Electrónico</label>
+            <input
+              type="email"
+              placeholder="admin@tudia.cl o cliente@tudia.cl"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="grupo-input">
+            <label>Contraseña</label>
+            <input
+              type="password"
+              placeholder="admin123 o cliente123"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn-accion">
+            Ingresar
+          </button>
+
+          <a 
+            href="#olvide" 
+            onClick={(e) => { e.preventDefault(); alert('Instrucciones enviadas a tu correo.'); }} 
+            className="l-contraseña"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
+        </form>
+      </main>
+    </div>
+  );
+}
+
+export default Login;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\Nosotros.jsx
+================================================================================
+
+import React from 'react';
+import Boton from '../components/Boton';
+import '../css/estilo.css';
+import '../css/nosotros.css'; // Importación de su CSS dedicado
+
+function Nosotros() {
+  const handleNewsletter = (e) => {
+    e.preventDefault();
+    alert("¡Gracias por suscribirte! Pronto recibirás ofertas exclusivas en tu correo.");
+  };
+
+  return (
+    <main className="main-centrado nosotros-contenedor">
+      {/* Encabezado Principal */}
+      <section className="nosotros-hero">
+        <h2 className="titulo-seccion">¿Quiénes Somos?</h2>
+        <p className="subtitulo-seccion">
+          Hacemos de cada celebración un recuerdo inolvidable, íntimo y perfecto.
+        </p>
+      </section>
+
+      {/* Mensaje de Marca (Marketing) */}
+      <div className="texto-nosotros">
+        <p>
+          En <strong>Tu Día Especial</strong> nos apasiona convertir momentos ordinarios en experiencias mágicas. 
+          Nos especializamos en <strong>aforos pequeños y exclusivos</strong> para garantizar que cada invitado viva 
+          una atmósfera cálida, acogedora y llena de detalles únicos.
+        </p>
+      </div>
+
+      {/* Pilares Clave */}
+      <section className="features-nosotros">
+        <div className="tarjeta-pilar">
+          <div className="icono-pilar">✨</div>
+          <p><strong>Exclusividad</strong> Eventos íntimos diseñados a tu medida.</p>
+        </div>
+        <div className="tarjeta-pilar">
+          <div className="icono-pilar">🤝</div>
+          <p><strong>Atención Cercana</strong> Acompañamiento en cada detalle.</p>
+        </div>
+        <div className="tarjeta-pilar">
+          <div className="icono-pilar">🛡️</div>
+          <p><strong>Reserva Garantizada</strong> Planificación sin sorpresas ni letra chica.</p>
+        </div>
+      </section>
+
+      {/* Formulario de Suscripción */}
+      <form className="caja-formulario form-newsletter" onSubmit={handleNewsletter}>
+        <h3 className="titulo-newsletter">🎁 ¡Únete a nuestro Club de Beneficios!</h3>
+        <p className="descripcion-newsletter">
+          Suscríbete y recibe descuentos exclusivos y fechas prioritarias para tus reservas.
+        </p>
+        <div className="grupo-input">
+          <input 
+            type="email" 
+            placeholder="Ingresa tu correo electrónico" 
+            required 
+            className="input-newsletter"
+          />
+        </div>
+        <Boton type="submit" className="btn-newsletter">
+          Suscribirme
+        </Boton>
+      </form>
+    </main>
+  );
+}
+
+export default Nosotros;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\blog.jsx
+================================================================================
+
+import '../css/estilo.css'
+import '../css/nosotros-blog.css'
+import { Link } from 'react-router-dom'
+import React from 'react'
+
+function    Blog() {
+    return (
+        <>
+        <main class="main-blog">
+        <div class="cabecera-blog">
+            <h2 class="titulo-seccion">Blog & Consejos</h2>
+            <p>Tendencias e ideas para planificar tu próxima celebración.</p>
+        </div>
+
+        <div class="grilla-blog">
+            <article class="tarjeta-blog">
+                <div class="img-blog-placeholder">
+                    <img src="img/boda-catalgo.jpg" alt="Matrimonios Íntimos"/>
+                </div>  
+                <div class="contenido-blog">
+                    <span class="fecha-post">15 Septiembre, 2026</span>
+                    <h3>5 Tips para organizar un Matrimonio Íntimo Inolvidable</h3>
+                    <p>Descubre cómo aprovechar un aforo reducido para crear una experiencia llena de detalles únicos y significativos para tus invitados.</p>
+                    <a href="#" class="link-leer-mas" onclick="alert('Próximamente disponible el artículo completo.'); return false;">Leer artículo →</a>
+                </div>
+            </article>
+
+            <article class="tarjeta-blog">
+                <div class="img-blog-placeholder">
+                    <img src="img/cumple-catalogo.jpg" alt="Cumpleaños Temáticos"/>
+                </div>
+                <div class="contenido-blog">
+                    <span class="fecha-post">02 Septiembre, 2026</span>
+                    <h3>Ideas Creativas para Cumpleaños Temáticos</h3>
+                    <p>Guía paso a paso para elegir paletas de colores, decoración y sorpresas personalizadas sin complicarte la vida.</p>
+                    <a href="#" class="link-leer-mas" onclick="alert('Próximamente disponible el artículo completo.'); return false;">Leer artículo →</a>
+                </div>
+            </article>
+
+
+            <article class="tarjeta-blog">
+                <div class="img-blog-placeholder">
+                    <img src="img/corporativo-catalogo.jpg" alt="Eventos Corporativos"/>
+                </div>
+                <div class="contenido-blog">
+                    <span class="fecha-post">20 Agosto, 2026</span>
+                    <h3>Cómo Planificar un Evento Corporativo Exitoso</h3>
+                    <p>Claves para la organización anticipada, elección de fechas y gestión eficiente de la lista de asistentes.</p>
+                    <a href="#" class="link-leer-mas" onclick="alert('Próximamente disponible el artículo completo.'); return false;">Leer artículo →</a>
+                </div>
+            </article>
+        </div>
+    </main>
+        </>
+    )
+}
+
+export default Blog;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\carrito.jsx
+================================================================================
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Boton from '../components/Boton';
+import '../css/catalogo.css';
+
+function Carrito({ carrito = [], setCarrito }) {
+    const cantidadEventos = carrito.length;
+    const totalPagar = carrito.reduce((suma, evento) => suma + Number(evento.precio || 0), 0);
+
+    const handleVaciar = () => {
+        if (setCarrito) setCarrito([]);
+    };
+
+    const handleEliminarItem = (indexAEliminar) => {
+        if (setCarrito) {
+            setCarrito(carrito.filter((_, index) => index !== indexAEliminar));
+        }
+    };
+
+    return (
+        <main className="main-carrito">
+            <h2 className="titulo-seccion">Detalle de tu Carrito</h2>
+
+            <div className="contenedor-carrito">
+                <div className="lista-carrito">
+                    {carrito.length === 0 ? (
+                        <p>No tienes eventos en tu carrito aún.</p>
+                    ) : (
+                        carrito.map((item, index) => (
+                            <div key={index} className="item-carrito" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                <div>
+                                    <h4>{item.titulo}</h4>
+                                    <p>${Number(item.precio).toLocaleString('es-CL')}</p>
+                                </div>
+                                <Boton onClick={() => handleEliminarItem(index)}>
+                                    ❌
+                                </Boton>
+                            </div>
+                        ))
+                    )}
+                </div>
+
+                <div className="resumen-compra">
+                    <h3>Resumen de Reserva</h3>
+                    
+                    <div className="linea-resumen">
+                        <span>Cantidad de eventos:</span>
+                        <span>{cantidadEventos}</span>
+                    </div>
+
+                    <div className="linea-resumen total">
+                        <span>Total a Pagar:</span>
+                        <strong>${totalPagar.toLocaleString('es-CL')}</strong>
+                    </div>
+                    
+                    <Boton className="btn-pagar" onClick={() => alert('¡Gracias por tu reserva!')}>
+                        Proceder al Pago
+                    </Boton>
+                    
+                    <Boton className="btn-vaciar" onClick={handleVaciar}>
+                        Vaciar Carrito
+                    </Boton>
+
+                    <Link to="/catalogo" className="link-volver">
+                        ← Volver al Catálogo
+                    </Link>
+                </div>
+            </div>
+        </main>
+    );
+}
+
+export default Carrito;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\catalogo.jsx
+================================================================================
+
+import React, { useState } from 'react';
+import TarjetaEvento from '../components/TarjetaEvento';
+import FiltroCatalogo from '../components/FiltroCatalogo'; // Importamos el filtro
+import '../css/estilo.css';
+import '../css/catalogo.css';
+
+function Catalogo({ agregarAlCarrito }) {
+    // Estados para controlar la búsqueda y la categoría seleccionada
+    const [busqueda, setBusqueda] = useState('');
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todas');
+
+    // Lista de eventos con su categoría asignada
+    const eventos = [
+        { id: 1, titulo: "Boda al aire libre", categoria: "matrimonios", aforo: "Aforo: 50 personas", precio: 150000, imagen: "/img/boda-catalgo.jpg", oferta: false },
+        { id: 2, titulo: "Cumpleaños Temático", categoria: "cumpleanos", aforo: "Aforo: 30 personas", precio: 80000, precioAnterior: 100000, imagen: "/img/cumple-catalogo.jpg", oferta: true },
+        { id: 3, titulo: "Evento Corporativo", categoria: "corporativos", aforo: "Aforo: 100 personas", precio: 250000, imagen: "/img/corporativo-catalogo.jpg", oferta: false },
+        { id: 4, titulo: "Fiesta de Graduación", categoria: "corporativos", aforo: "Aforo: 80 personas", precio: 180000, precioAnterior: 220000, imagen: "/img/graduacion-catalogo.jpg", oferta: true },
+        { id: 5, titulo: "Baby Shower Especial", categoria: "cumpleanos", aforo: "Aforo: 25 personas", precio: 60000, imagen: "/img/babyshower-catalogo.jpg", oferta: false },
+        { id: 6, titulo: "Aniversario de Bodas", categoria: "matrimonios", aforo: "Aforo: 40 personas", precio: 120000, imagen: "/img/aniversario-catalogo.jpg", oferta: false },
+        { id: 7, titulo: "Bautizo Familiar", categoria: "cumpleanos", aforo: "Aforo: 35 personas", precio: 90000, imagen: "/img/bautizo-catalogo.jpg", oferta: false },
+        { id: 8, titulo: "Fiesta de Gala", categoria: "corporativos", aforo: "Aforo: 120 personas", precio: 300000, imagen: "/img/gala-catalogo.jpg", oferta: false },
+        { id: 9, titulo: "Cena Romántica", categoria: "matrimonios", aforo: "Aforo: 2 personas", precio: 70000, precioAnterior: 90000, imagen: "/img/cenaromantica-catalogo.jpg", oferta: true },
+        { id: 10, titulo: "Despedida de Soltero/a", categoria: "cumpleanos", aforo: "Aforo: 20 personas", precio: 110000, imagen: "/img/despedida-catalogo.jpg", oferta: false }
+    ];
+
+    // Lógica para filtrar eventos
+    const eventosFiltrados = eventos.filter((evento) => {
+        // Coincidencia por categoría u ofertas
+        const coincideCategoria = 
+            categoriaSeleccionada === 'todas' ||
+            (categoriaSeleccionada === 'ofertas' && evento.oferta) ||
+            evento.categoria === categoriaSeleccionada;
+
+        // Coincidencia por texto ingresado
+        const coincideBusqueda = evento.titulo
+            .toLowerCase()
+            .includes(busqueda.toLowerCase());
+
+        return coincideCategoria && coincideBusqueda;
+    });
+
+    return (
+        <main className="main-catalogo">
+            <h2 className="titulo-seccion">Nuestros Eventos</h2>
+
+            {/* Componente de Filtro */}
+            <FiltroCatalogo 
+                busqueda={busqueda} 
+                setBusqueda={setBusqueda} 
+                categoriaSeleccionada={categoriaSeleccionada} 
+                setCategoriaSeleccionada={setCategoriaSeleccionada} 
+            />
+
+            {/* Lista filtrada en tiempo real */}
+            <div className="grilla-catalogo">
+                {eventosFiltrados.length === 0 ? (
+                    <p>
+                        🔍 No se encontraron eventos que coincidan con tu búsqueda.
+                    </p>
+                ) : (
+                    eventosFiltrados.map((evento) => (
+                        <TarjetaEvento 
+                            key={evento.id} 
+                            evento={evento} 
+                            agregarAlCarrito={agregarAlCarrito} 
+                        />
+                    ))
+                )}
+            </div>
+        </main>
+    );
+}
+
+export default Catalogo;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\test\app.test.jsx
+================================================================================
+
+import {render, screen } from "@testing-library/react";
+import App from "../App";
+import Navegacion from "../components/navegacion";
+
+describe("componente navegacio" , () =>{
+    test("renderiza el componente correctamente", () => {
+    render(<Navegacion/>);
+    const componente =screen.getByRole("button")
+    expect(componente).toBeInDocument();
+    });
+});
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: HTML\jss\carrito.js
+================================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const contadorBadge = document.getElementById('cart-count');
+    const listaCarritoEl = document.getElementById('lista-carrito');
+    const resumenCantidadEl = document.getElementById('resumen-cantidad');
+    const resumenTotalEl = document.getElementById('resumen-total');
+    const btnVaciar = document.getElementById('btn-vaciar');
+
+    // Cargar carrito existente desde localStorage o array vacío
+    let carrito = JSON.parse(localStorage.getItem('carrito_tu_dia')) || [];
+
+    // 1. Capturar clic en botones "Agregar al Carrito" en catalogo.html
+    const botonesAgregar = document.querySelectorAll('.btn-agregar');
+    botonesAgregar.forEach(boton => {
+        boton.addEventListener('click', (e) => {
+            const data = e.target.dataset;
+
+            const producto = {
+                id: data.id,
+                titulo: data.titulo,
+                aforo: data.aforo,
+                precio: parseInt(data.precio),
+                imagen: data.imagen,
+                cantidad: 1
+            };
+
+            const existe = carrito.find(item => item.id === producto.id);
+            if (existe) {
+                existe.cantidad++;
+            } else {
+                carrito.push(producto);
+            }
+
+            guardarYActualizar();
+            alert(`¡"${producto.titulo}" fue agregado al carrito!`);
+        });
+    });
+
+    // 2. Modificar cantidades (+ / -)
+    window.cambiarCantidad = function(id, cambio) {
+        const item = carrito.find(p => p.id === id);
+        if (item) {
+            item.cantidad += cambio;
+            if (item.cantidad <= 0) {
+                carrito = carrito.filter(p => p.id !== id);
+            }
+            guardarYActualizar();
+        }
+    };
+
+    // 3. Eliminar evento individual
+    window.eliminarItem = function(id) {
+        carrito = carrito.filter(p => p.id !== id);
+        guardarYActualizar();
+    };
+
+    // 4. Vaciar carrito completo
+    if (btnVaciar) {
+        btnVaciar.addEventListener('click', () => {
+            if (confirm('¿Seguro que deseas vaciar el carrito?')) {
+                carrito = [];
+                guardarYActualizar();
+            }
+        });
+    }
+
+    // 5. Guardar en localStorage y refrescar la vista
+    function guardarYActualizar() {
+        localStorage.setItem('carrito_tu_dia', JSON.stringify(carrito));
+        actualizarContadorHeader();
+        if (listaCarritoEl) {
+            renderizarPaginaCarrito();
+        }
+    }
+
+    function actualizarContadorHeader() {
+        if (contadorBadge) {
+            const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+            contadorBadge.textContent = totalItems;
+        }
+    }
+
+    // 6. Renderizar contenido de carrito.html
+    function renderizarPaginaCarrito() {
+        listaCarritoEl.innerHTML = '';
+
+        if (carrito.length === 0) {
+            listaCarritoEl.innerHTML = `
+                <div class="carrito-vacio-msg">
+                    <h3>Tu carrito está vacío 🛒</h3>
+                    <p>Explora nuestro catálogo para elegir tus eventos preferidos.</p>
+                </div>
+            `;
+            if (resumenCantidadEl) resumenCantidadEl.textContent = '0';
+            if (resumenTotalEl) resumenTotalEl.textContent = '$0';
+            return;
+        }
+
+        carrito.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('item-carrito');
+            itemDiv.innerHTML = `
+                <img src="${item.imagen}" alt="${item.titulo}" class="img-carrito">
+                <div class="info-item">
+                    <h3>${item.titulo}</h3>
+                    <p>${item.aforo}</p>
+                    <p><strong>$${item.precio.toLocaleString('es-CL')}</strong> c/u</p>
+                    <div class="controles-cantidad">
+                        <button class="btn-cant" onclick="cambiarCantidad('${item.id}', -1)">-</button>
+                        <span>Cant: <strong>${item.cantidad}</strong></span>
+                        <button class="btn-cant" onclick="cambiarCantidad('${item.id}', 1)">+</button>
+                    </div>
+                </div>
+                <div>
+                    <p>Subtotal:</p>
+                    <strong>$${(item.precio * item.cantidad).toLocaleString('es-CL')}</strong>
+                </div>
+                <button class="btn-eliminar-item" onclick="eliminarItem('${item.id}')" title="Eliminar">&times;</button>
+            `;
+            listaCarritoEl.appendChild(itemDiv);
+        });
+
+        const totalAcumulado = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+        const cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+
+        if (resumenCantidadEl) resumenCantidadEl.textContent = cantidadTotal;
+        if (resumenTotalEl) resumenTotalEl.textContent = `$${totalAcumulado.toLocaleString('es-CL')}`;
+    }
+
+    // Inicializar contador al cargar cualquier vista
+    actualizarContadorHeader();
+    if (listaCarritoEl) {
+        renderizarPaginaCarrito();
+    }
+});
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: HTML\jss\filtros.js
+================================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const inputBuscar = document.getElementById('input-buscar');
+    const btnLimpiar = document.getElementById('btn-limpiar-busqueda');
+    const chips = document.querySelectorAll('.btn-chip');
+    const tarjetas = document.querySelectorAll('.tarjeta-evento');
+    const sinResultados = document.getElementById('sin-resultados');
+    const btnRestablecer = document.getElementById('btn-restablecer');
+
+    let categoriaActiva = 'todas';
+
+    // 1. Detectar si viene el parámetro ofertas=true en la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('ofertas') === 'true') {
+        activarChip('ofertas');
+    }
+
+    // 2. Eventos en los Chips de Categoría
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            activarChip(chip.dataset.categoria);
+        });
+    });
+
+    function activarChip(cat) {
+        categoriaActiva = cat;
+        chips.forEach(c => {
+            if (c.dataset.categoria === cat) {
+                c.classList.add('active');
+            } else {
+                c.classList.remove('active');
+            }
+        });
+        filtrarEventos();
+    }
+
+    // 3. Evento de Búsqueda por Texto
+    if (inputBuscar) {
+        inputBuscar.addEventListener('input', () => {
+            if (inputBuscar.value.trim() !== '') {
+                btnLimpiar.style.display = 'block';
+            } else {
+                btnLimpiar.style.display = 'none';
+            }
+            filtrarEventos();
+        });
+    }
+
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', () => {
+            inputBuscar.value = '';
+            btnLimpiar.style.display = 'none';
+            filtrarEventos();
+        });
+    }
+
+    if (btnRestablecer) {
+        btnRestablecer.addEventListener('click', () => {
+            inputBuscar.value = '';
+            if (btnLimpiar) btnLimpiar.style.display = 'none';
+            activarChip('todas');
+        });
+    }
+
+    // 4. Función de Filtrado General
+    function filtrarEventos() {
+        const texto = inputBuscar ? inputBuscar.value.toLowerCase().trim() : '';
+        let visibles = 0;
+
+        tarjetas.forEach(tarjeta => {
+            const titulo = tarjeta.querySelector('h3').textContent.toLowerCase();
+            const categoria = tarjeta.dataset.categoria;
+            const esOferta = tarjeta.dataset.oferta === 'true';
+
+            // Comprobación de texto
+            const coincideTexto = titulo.includes(texto);
+
+            // Comprobación de categoría
+            let coincideCategoria = false;
+            if (categoriaActiva === 'todas') {
+                coincideCategoria = true;
+            } else if (categoriaActiva === 'ofertas') {
+                coincideCategoria = esOferta;
+            } else {
+                coincideCategoria = (categoria === categoriaActiva);
+            }
+
+            // Aplicar visibilidad
+            if (coincideTexto && coincideCategoria) {
+                tarjeta.style.display = 'flex';
+                visibles++;
+            } else {
+                tarjeta.style.display = 'none';
+            }
+        });
+
+        // Mostrar u ocultar mensaje de "Sin resultados"
+        if (sinResultados) {
+            sinResultados.style.display = (visibles === 0) ? 'block' : 'none';
+        }
+    }
+});
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: HTML\jss\validacion_evento.js
+================================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const formEvento = document.getElementById('form-evento');
+    
+    if (formEvento) { // Solo se ejecuta si estamos en evento.html
+        formEvento.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
+
+            // 1. Capturar todos los elementos (Incluyendo la nueva fecha)
+            const invitados = document.getElementById('evento-invitados');
+            const telefono = document.getElementById('evento-telefono');
+            const direccion = document.getElementById('evento-direccion');
+            const fecha = document.getElementById('evento-fecha'); // Nuevo
+            
+            const errInvitados = document.getElementById('error-invitados');
+            const errTelefono = document.getElementById('error-telefono');
+            const errDireccion = document.getElementById('error-direccion');
+            const errFecha = document.getElementById('error-fecha'); // Nuevo
+
+            // 2. Limpiar errores anteriores
+            invitados.classList.remove('input-error'); 
+            errInvitados.style.display = 'none';
+            
+            telefono.classList.remove('input-error'); 
+            errTelefono.style.display = 'none';
+            
+            direccion.classList.remove('input-error'); 
+            errDireccion.style.display = 'none';       
+            
+            fecha.classList.remove('input-error'); // Nuevo
+            errFecha.style.display = 'none';       // Nuevo
+
+            // 3. Validar que invitados sea un número mayor a 0
+            if (isNaN(invitados.value) || invitados.value <= 0) {
+                errInvitados.textContent = 'Error: Ingresa una cantidad válida de invitados.';
+                errInvitados.style.display = 'block';
+                invitados.classList.add('input-error');
+                valido = false;
+            }
+
+            // 4. Validar teléfono (+56 9 seguido de 8 números)
+            const regexTelefono = /^\+56\s9\s\d{4}\s\d{4}$/;
+            if (!regexTelefono.test(telefono.value.trim())) {
+                errTelefono.textContent = 'Sugerencia: Usa el formato +56 9 XXXX XXXX';
+                errTelefono.style.display = 'block';
+                telefono.classList.add('input-error');
+                valido = false;
+            }
+
+            // 5. Validar dirección 
+            if (direccion.value.trim() === '') {
+                errDireccion.textContent = 'Error: La dirección del evento es obligatoria.';
+                errDireccion.style.display = 'block';
+                direccion.classList.add('input-error');
+                valido = false;
+            } else if (direccion.value.trim().length < 10) {
+                errDireccion.textContent = 'Sugerencia: Ingresa una dirección más detallada (calle y número).';
+                errDireccion.style.display = 'block';
+                direccion.classList.add('input-error');
+                valido = false;
+            }
+
+            // 6. Validar fecha (El bloque nuevo)
+            if (fecha.value === '') {
+                errFecha.textContent = 'Error: Debes seleccionar una fecha en el calendario.';
+                errFecha.style.display = 'block';
+                fecha.classList.add('input-error');
+                valido = false;
+            }
+
+            // 7. Ejecutar si todo es válido
+            if (valido) {
+                alert('¡Evento agendado con éxito!');
+                formEvento.reset();
+            }
+        });
+    }
+});
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: HTML\jss\validaciones_contacto.js
+================================================================================
+
+const formContacto = document.getElementById('form-contacto');
+    if (formContacto) { // Solo se ejecuta si estamos en contacto.html
+        formContacto.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
+
+            const nombre = document.getElementById('contacto-nombre');
+            const mensaje = document.getElementById('contacto-mensaje');
+            const errNombre = document.getElementById('error-nombre');
+            const errMensaje = document.getElementById('error-mensaje');
+
+            nombre.classList.remove('input-error'); errNombre.style.display = 'none';
+            mensaje.classList.remove('input-error'); errMensaje.style.display = 'none';
+
+            // Validar que el nombre solo tenga letras y espacios (Expresión Regular básica)
+            const regexLetras = /^[a-zA-Z\s]+$/;
+            if (!regexLetras.test(nombre.value.trim())) {
+                errNombre.textContent = 'Error: El nombre solo debe contener letras.';
+                errNombre.style.display = 'block';
+                nombre.classList.add('input-error');
+                valido = false;
+            }
+
+            if (mensaje.value.trim().length < 10) {
+                errMensaje.textContent = 'Sugerencia: Por favor, explícanos con más detalle (mínimo 10 caracteres).';
+                errMensaje.style.display = 'block';
+                mensaje.classList.add('input-error');
+                valido = false;
+            }
+
+            if (valido) {
+                alert('¡Mensaje enviado exitosamente!');
+                formContacto.reset(); // Limpia el formulario
+            }
+        });
+        }
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: HTML\jss\validaciones_login.js
+================================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    const formLogin = document.getElementById('form-login');
+    
+    if (formLogin) {
+        formLogin.addEventListener('submit', function(evento) {
+            evento.preventDefault();
+            let valido = true;
+
+            const email = document.getElementById('usuario-email');
+            const pass = document.getElementById('usuario-pass');
+            const errEmail = document.getElementById('error-email');
+            const errPass = document.getElementById('error-pass');
+
+            // Limpiar errores previos
+            email.classList.remove('input-error'); 
+            errEmail.style.display = 'none';
+            pass.classList.remove('input-error'); 
+            errPass.style.display = 'none';
+
+            const valorEmail = email.value.trim().toLowerCase();
+            const valorPass = pass.value.trim();
+
+            if (valorEmail === '') {
+                errEmail.textContent = 'Por favor, ingresa tu correo o usuario.';
+                errEmail.style.display = 'block';
+                email.classList.add('input-error');
+                valido = false;
+            }
+
+            if (valorPass.length < 6) {
+                errPass.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                errPass.style.display = 'block';
+                pass.classList.add('input-error');
+                valido = false;
+            }
+
+            if (valido) {
+                // Credenciales del Administrador
+                if (valorEmail === 'admin@tudia.cl' && valorPass === 'admin123') {
+                    alert('¡Bienvenido Administrador!');
+                    localStorage.setItem('sesion_rol', 'admin');
+                    window.location.href = 'admin.html';
+                } 
+                // Credenciales del Cliente
+                else if (valorEmail === 'cliente@tudia.cl' && valorPass === 'cliente123') {
+                    alert('¡Inicio de sesión exitoso!');
+                    localStorage.setItem('sesion_rol', 'cliente');
+                    window.location.href = 'index.html';
+                } 
+                // Credenciales Incorrectas
+                else {
+                    errPass.textContent = 'Correo o contraseña incorrectos. Revisa las credenciales de prueba.';
+                    errPass.style.display = 'block';
+                    pass.classList.add('input-error');
+                }
+            }
+        });
+    } 
+});
+
+--------------------------------------------------------------------------------
+
