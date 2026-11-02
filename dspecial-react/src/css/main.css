@@ -34,25 +34,7 @@
 }
 
 /* El botón principal "Agregar Evento" que flota sobre la imagen */
-#btn-agregar-evento {
-    position: relative;
-    z-index: 2;
 
-    padding: 14px 32px;
-
-    border: none;
-    border-radius: 8px;
-
-    background-color: #d17a6c;
-    color: white;
-
-    font-size: 1.1rem;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition: all 0.25s ease;
-}
 
 #btn-contactanos {
     position: relative;

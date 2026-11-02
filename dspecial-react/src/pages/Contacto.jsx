@@ -1,4 +1,5 @@
 import '../css/formularios-extra.css'
+import '../css/estilo.css' 
 function Contacto() {
   return (
     <>

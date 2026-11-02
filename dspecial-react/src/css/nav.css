@@ -23,25 +23,48 @@ nav {
     color: #2f3c46;
 }
 
-#btn-abrir-menu {
-    position: absolute;
-    left: 25px;
+.btn-n {
+    position: relative;
+    z-index: 2;
 
-    width: 32px;
-    height: 32px;
+    margin-left: 16px;
+    padding: 5px 14px;
 
-    display: flex;
-    align-items: center;
+    border: none;
+    border-radius: 8px;
+
+    background-color: #d17a6c;
+    color: white;
+
+    font-size: 1.1rem;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
 }
 
-#btn-abrir-menu img {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-
-    transition: transform 0.2s ease;
+.btn-n:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
-#btn-abrir-menu img:hover {
-    transform: scale(1.08);
+.btn-carrito {
+    position: relative;
+    z-index: 2;
+
+    margin-left: 16px;
+    padding: 5px 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #1a2b3c;
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
 }

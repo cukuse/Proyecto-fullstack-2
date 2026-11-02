@@ -1,4 +1,4 @@
-import ("../css/estilo.css")
+import '../css/estilo.css'
 
 function Pie() {
 

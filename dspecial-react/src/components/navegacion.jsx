@@ -1,15 +1,29 @@
-import '../css/estilo.css';
+import { Link } from 'react-router-dom';
+import Boton from './boton';
+import BotonCarrito from './botonCarrito';
+import React from 'react';
 
-function Navegacion() {
+function Navegacion({totalItems}) {
     return (
         <>
         <nav>
-        <a href="/catalogo"><button id="btn-nosotros" onclick="Animation">Catalogo</button></a>
-        <a href="ofertas.html"><button id="btn-nosotros" onclick="Animation"> Ofertas</button></a>
-        <a href="/Nosotros"><button id="btn-contactanos" onclick="Animation">Contactanos</button></a>
-        <a href="nosotros.html"><button id="btn-nosotros" onclick="Animation">¿Quienes Somos?</button></a>
-        <a href="blog.html"><button id="btn-nosotros" onclick="Animation"> Blog</button></a>
-        <a href="carrito.html"><button id="btn-carrito" onclick="Animation">🛒</button></a>
+        <Link to="/">
+            <Boton  className="btn-n">Inicio</Boton>
+        </Link>
+        <Link to="/catalogo">
+            <Boton className="btn-n">Catalogo De Eventos</Boton>
+        </Link>
+        <Link to="/contacto">
+            <Boton className="btn-n">Contactanos</Boton>
+        </Link>
+        <Link to="/Nosotros">
+            <Boton className="btn-n">¿Quienes Somos?</Boton>
+        </Link>
+        <Link to="/blog">
+            <Boton className="btn-n">Blog</Boton>
+        </Link>
+        
+        <BotonCarrito totalItems={totalItems}/>
         </nav>
         </>
     )
