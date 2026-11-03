@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Layout / Componentes Globales
 import Cabecera from './components/cabecera';
 import Navegacion from './components/navegacion';
 import Pie from './components/footer';
 
-// Páginas / Vistas
 import Home from './pages/Home';
 import Contacto from './pages/Contacto';
 import Nosotros from './pages/Nosotros';
@@ -16,31 +14,27 @@ import Blog from './pages/blog';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
 import Checkout from './pages/Checkout';
+import Perfil from './pages/Perfil';
 
-// ----------------------------------------------------------------------
-// DATOS INICIALES DE PRUEBA (MOCK DATA)
-// ----------------------------------------------------------------------
 const PRODUCTOS_INICIALES = [
   { id: 1, titulo: "Boda al aire libre", categoria: "matrimonios", aforo: "Aforo: 50 personas", precio: 150000, imagen: "/img/boda-catalgo.jpg", oferta: false },
-  { id: 2, titulo: "Cumpleaños Temático", categoria: "cumpleanos", aforo: "Aforo: 30 personas", precio: 80000, precioAnterior: 100000, imagen: "/img/cumple-catalogo.jpg", oferta: true },
-  { id: 3, titulo: "Evento Corporativo", categoria: "corporativos", aforo: "Aforo: 100 personas", precio: 250000, imagen: "/img/corporativo-catalogo.jpg", oferta: false },
-  { id: 4, titulo: "Fiesta de Graduación", categoria: "corporativos", aforo: "Aforo: 80 personas", precio: 180000, precioAnterior: 220000, imagen: "/img/graduacion-catalogo.jpg", oferta: true },
-  { id: 5, titulo: "Baby Shower Especial", categoria: "cumpleanos", aforo: "Aforo: 25 personas", precio: 60000, imagen: "/img/babyshower-catalogo.jpg", oferta: false }
+  { id: 2, titulo: "Cumpleaños Temático", categoria: "cumpleanos", aforo: "Aforo: 30 personas", precio: 80000, precioAnterior: 100000, imagen: "/img/cumple-catalogo.jpg", oferta: true }
 ];
 
 const VENTAS_INICIALES = [
   { id: 'V-1001', cliente: 'María López', evento: 'Boda al aire libre', monto: 150000, fecha: '2026-03-01', estado: 'Completado', banco: 'Banco de Chile', tarjeta: 'Visa **** 4321' }
 ];
 
+const USUARIOS_INICIALES = [
+  { id: 1, nombre: 'Administrador', email: 'admin@tudia.cl', rol: 'admin', telefono: '+56 9 9999 8888', direccion: 'Oficina Central #100', foto: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+  { id: 2, nombre: 'Juan Pérez', email: 'cliente@tudia.cl', rol: 'cliente', telefono: '+56 9 1234 5678', direccion: 'Av. Siempre Viva 742', foto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' }
+];
+
 const HISTORIAL_INICIAL = [
   { id: 1, usuario: 'Sistema', accion: 'Inicialización de la plataforma', fecha: '2026-03-01 10:00:00', rol: 'admin' }
 ];
 
-// ----------------------------------------------------------------------
-// COMPONENTE PRINCIPAL (APP)
-// ----------------------------------------------------------------------
 function App() {
-  // --- 1. ESTADOS CON PERSISTENCIA EN LOCALSTORAGE ---
   const [carrito, setCarrito] = useState(() => {
     const guardado = localStorage.getItem('carrito_tu_dia');
     return guardado ? JSON.parse(guardado) : [];
@@ -49,6 +43,11 @@ function App() {
   const [usuario, setUsuario] = useState(() => {
     const usuarioGuardado = localStorage.getItem('usuario_tu_dia');
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+  });
+
+  const [usuarios, setUsuarios] = useState(() => {
+    const guardados = localStorage.getItem('usuarios_tu_dia');
+    return guardados ? JSON.parse(guardados) : USUARIOS_INICIALES;
   });
 
   const [productos, setProductos] = useState(() => {
@@ -66,7 +65,6 @@ function App() {
     return guardado ? JSON.parse(guardado) : HISTORIAL_INICIAL;
   });
 
-  // --- 2. EFECTOS (SINCRONIZACIÓN CON LOCALSTORAGE) ---
   useEffect(() => {
     localStorage.setItem('carrito_tu_dia', JSON.stringify(carrito));
   }, [carrito]);
@@ -80,6 +78,10 @@ function App() {
   }, [usuario]);
 
   useEffect(() => {
+    localStorage.setItem('usuarios_tu_dia', JSON.stringify(usuarios));
+  }, [usuarios]);
+
+  useEffect(() => {
     localStorage.setItem('productos_tu_dia', JSON.stringify(productos));
   }, [productos]);
 
@@ -91,7 +93,6 @@ function App() {
     localStorage.setItem('historial_tu_dia', JSON.stringify(historial));
   }, [historial]);
 
-  // --- 3. FUNCIONES DE LÓGICA Y EVENTOS ---
   const registrarActividad = (accion, rolEjecutor = 'cliente') => {
     const nuevoRegistro = {
       id: Date.now(),
@@ -120,20 +121,17 @@ function App() {
     setUsuario(null);
   };
 
-  // --- 4. ESTRUCTURA Y RUTAS ---
   return (
     <>
       <Cabecera usuario={usuario} logout={logoutUsuario} />
       <Navegacion totalItems={carrito.length} usuario={usuario} />
 
       <Routes>
-        {/* Rutas Estáticas */}
         <Route path="/" element={<Home />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/Nosotros" element={<Nosotros />} />
         <Route path="/Blog" element={<Blog />} />
 
-        {/* Rutas Dinámicas con Estado */}
         <Route 
           path="/catalogo" 
           element={<Catalogo productos={productos} agregarAlCarrito={agregarAlCarrito} />} 
@@ -147,13 +145,26 @@ function App() {
           element={<Login usuario={usuario} login={loginUsuario} logout={logoutUsuario} />} 
         />
         <Route 
-          path="/Admin" 
+          path="/perfil" 
+          element={
+          <Perfil 
+        usuario={usuario} 
+        setUsuario={setUsuario}
+        setUsuarios={setUsuarios}
+        registrarActividad={registrarActividad} 
+          />}
+        />
+        <Route 
+          path="/admin" 
           element={
             <Admin 
               usuario={usuario}
               productos={productos}
               setProductos={setProductos}
               ventas={ventas}
+              setVentas={setVentas}
+              usuarios={usuarios}
+              setUsuarios={setUsuarios}
               historial={historial}
               registrarActividad={registrarActividad}
             />
@@ -170,8 +181,6 @@ function App() {
               usuario={usuario}
             />
           } 
-
-          
         />
       </Routes>
 

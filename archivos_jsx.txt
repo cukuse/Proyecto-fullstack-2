@@ -58,12 +58,10 @@ ARCHIVO: dspecial-react\src\App.jsx
 import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Layout / Componentes Globales
 import Cabecera from './components/cabecera';
 import Navegacion from './components/navegacion';
 import Pie from './components/footer';
 
-// Páginas / Vistas
 import Home from './pages/Home';
 import Contacto from './pages/Contacto';
 import Nosotros from './pages/Nosotros';
@@ -73,31 +71,27 @@ import Blog from './pages/blog';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
 import Checkout from './pages/Checkout';
+import Perfil from './pages/Perfil';
 
-// ----------------------------------------------------------------------
-// DATOS INICIALES DE PRUEBA (MOCK DATA)
-// ----------------------------------------------------------------------
 const PRODUCTOS_INICIALES = [
   { id: 1, titulo: "Boda al aire libre", categoria: "matrimonios", aforo: "Aforo: 50 personas", precio: 150000, imagen: "/img/boda-catalgo.jpg", oferta: false },
-  { id: 2, titulo: "Cumpleaños Temático", categoria: "cumpleanos", aforo: "Aforo: 30 personas", precio: 80000, precioAnterior: 100000, imagen: "/img/cumple-catalogo.jpg", oferta: true },
-  { id: 3, titulo: "Evento Corporativo", categoria: "corporativos", aforo: "Aforo: 100 personas", precio: 250000, imagen: "/img/corporativo-catalogo.jpg", oferta: false },
-  { id: 4, titulo: "Fiesta de Graduación", categoria: "corporativos", aforo: "Aforo: 80 personas", precio: 180000, precioAnterior: 220000, imagen: "/img/graduacion-catalogo.jpg", oferta: true },
-  { id: 5, titulo: "Baby Shower Especial", categoria: "cumpleanos", aforo: "Aforo: 25 personas", precio: 60000, imagen: "/img/babyshower-catalogo.jpg", oferta: false }
+  { id: 2, titulo: "Cumpleaños Temático", categoria: "cumpleanos", aforo: "Aforo: 30 personas", precio: 80000, precioAnterior: 100000, imagen: "/img/cumple-catalogo.jpg", oferta: true }
 ];
 
 const VENTAS_INICIALES = [
   { id: 'V-1001', cliente: 'María López', evento: 'Boda al aire libre', monto: 150000, fecha: '2026-03-01', estado: 'Completado', banco: 'Banco de Chile', tarjeta: 'Visa **** 4321' }
 ];
 
+const USUARIOS_INICIALES = [
+  { id: 1, nombre: 'Administrador', email: 'admin@tudia.cl', rol: 'admin', telefono: '+56 9 9999 8888', direccion: 'Oficina Central #100', foto: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' },
+  { id: 2, nombre: 'Juan Pérez', email: 'cliente@tudia.cl', rol: 'cliente', telefono: '+56 9 1234 5678', direccion: 'Av. Siempre Viva 742', foto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' }
+];
+
 const HISTORIAL_INICIAL = [
   { id: 1, usuario: 'Sistema', accion: 'Inicialización de la plataforma', fecha: '2026-03-01 10:00:00', rol: 'admin' }
 ];
 
-// ----------------------------------------------------------------------
-// COMPONENTE PRINCIPAL (APP)
-// ----------------------------------------------------------------------
 function App() {
-  // --- 1. ESTADOS CON PERSISTENCIA EN LOCALSTORAGE ---
   const [carrito, setCarrito] = useState(() => {
     const guardado = localStorage.getItem('carrito_tu_dia');
     return guardado ? JSON.parse(guardado) : [];
@@ -106,6 +100,11 @@ function App() {
   const [usuario, setUsuario] = useState(() => {
     const usuarioGuardado = localStorage.getItem('usuario_tu_dia');
     return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+  });
+
+  const [usuarios, setUsuarios] = useState(() => {
+    const guardados = localStorage.getItem('usuarios_tu_dia');
+    return guardados ? JSON.parse(guardados) : USUARIOS_INICIALES;
   });
 
   const [productos, setProductos] = useState(() => {
@@ -123,7 +122,6 @@ function App() {
     return guardado ? JSON.parse(guardado) : HISTORIAL_INICIAL;
   });
 
-  // --- 2. EFECTOS (SINCRONIZACIÓN CON LOCALSTORAGE) ---
   useEffect(() => {
     localStorage.setItem('carrito_tu_dia', JSON.stringify(carrito));
   }, [carrito]);
@@ -137,6 +135,10 @@ function App() {
   }, [usuario]);
 
   useEffect(() => {
+    localStorage.setItem('usuarios_tu_dia', JSON.stringify(usuarios));
+  }, [usuarios]);
+
+  useEffect(() => {
     localStorage.setItem('productos_tu_dia', JSON.stringify(productos));
   }, [productos]);
 
@@ -148,7 +150,6 @@ function App() {
     localStorage.setItem('historial_tu_dia', JSON.stringify(historial));
   }, [historial]);
 
-  // --- 3. FUNCIONES DE LÓGICA Y EVENTOS ---
   const registrarActividad = (accion, rolEjecutor = 'cliente') => {
     const nuevoRegistro = {
       id: Date.now(),
@@ -177,20 +178,17 @@ function App() {
     setUsuario(null);
   };
 
-  // --- 4. ESTRUCTURA Y RUTAS ---
   return (
     <>
       <Cabecera usuario={usuario} logout={logoutUsuario} />
       <Navegacion totalItems={carrito.length} usuario={usuario} />
 
       <Routes>
-        {/* Rutas Estáticas */}
         <Route path="/" element={<Home />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/Nosotros" element={<Nosotros />} />
         <Route path="/Blog" element={<Blog />} />
 
-        {/* Rutas Dinámicas con Estado */}
         <Route 
           path="/catalogo" 
           element={<Catalogo productos={productos} agregarAlCarrito={agregarAlCarrito} />} 
@@ -204,13 +202,26 @@ function App() {
           element={<Login usuario={usuario} login={loginUsuario} logout={logoutUsuario} />} 
         />
         <Route 
-          path="/Admin" 
+          path="/perfil" 
+          element={
+          <Perfil 
+        usuario={usuario} 
+        setUsuario={setUsuario}
+        setUsuarios={setUsuarios}
+        registrarActividad={registrarActividad} 
+          />}
+        />
+        <Route 
+          path="/admin" 
           element={
             <Admin 
               usuario={usuario}
               productos={productos}
               setProductos={setProductos}
               ventas={ventas}
+              setVentas={setVentas}
+              usuarios={usuarios}
+              setUsuarios={setUsuarios}
               historial={historial}
               registrarActividad={registrarActividad}
             />
@@ -607,6 +618,261 @@ export default AdminTablaProductos;
 --------------------------------------------------------------------------------
 
 ================================================================================
+ARCHIVO: dspecial-react\src\components\AdminTablaUsuarios.jsx
+================================================================================
+
+import React, { useState } from 'react';
+
+function AdminTablaUsuarios({ usuarios, setUsuarios, registrarActividad }) {
+  const [usuarioEditar, setUsuarioEditar] = useState(null);
+
+  const handleGuardarUsuario = (e) => {
+    e.preventDefault();
+    setUsuarios(prev => prev.map(u => u.id === usuarioEditar.id ? usuarioEditar : u));
+    registrarActividad(`Admin modificó la cuenta de: ${usuarioEditar.nombre}`, 'admin');
+    setUsuarioEditar(null);
+  };
+
+  const handleEliminarUsuario = (id, nombre) => {
+    if (window.confirm(`¿Seguro que deseas eliminar al usuario "${nombre}"?`)) {
+      setUsuarios(prev => prev.filter(u => u.id !== id));
+      registrarActividad(`Admin eliminó al usuario: ${nombre}`, 'admin');
+    }
+  };
+
+  return (
+    <section className="card shadow-sm mb-4 border-0">
+      <div className="card-header bg-dark text-white fw-bold d-flex justify-content-between align-items-center">
+        <span>👥 Usuarios Registrados ({usuarios.length})</span>
+      </div>
+
+      <div className="table-responsive">
+        <table className="table table-hover align-middle mb-0">
+          <thead className="table-secondary">
+            <tr>
+              <th>Foto</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Teléfono</th>
+              <th className="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usuarios.map((u) => (
+              <tr key={u.id}>
+                <td>
+                  {u.foto ? (
+                    <img 
+                      src={u.foto} 
+                      alt={u.nombre} 
+                      className="rounded-circle border"
+                      style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <div className="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                      👤
+                    </div>
+                  )}
+                </td>
+                <td className="fw-bold">{u.nombre}</td>
+                <td>{u.email}</td>
+                <td>
+                  <span className={`badge ${u.rol === 'admin' ? 'bg-primary' : 'bg-info text-dark'}`}>
+                    {u.rol.toUpperCase()}
+                  </span>
+                </td>
+                <td>{u.telefono || 'Sin registro'}</td>
+                <td className="text-center">
+                  <button 
+                    className="btn btn-sm btn-outline-primary me-2"
+                    onClick={() => setUsuarioEditar(u)}
+                  >
+                    ✏️ Editar
+                  </button>
+                  <button 
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => handleEliminarUsuario(u.id, u.nombre)}
+                  >
+                    🗑️ Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* MODAL DE EDICIÓN DE USUARIO POR ADMIN */}
+      {usuarioEditar && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header bg-dark text-white">
+                <h5 className="modal-title">✏️ Editar Usuario (Admin)</h5>
+                <button type="button" className="btn-close btn-close-white" onClick={() => setUsuarioEditar(null)}></button>
+              </div>
+              <form onSubmit={handleGuardarUsuario}>
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">Nombre</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      value={usuarioEditar.nombre} 
+                      onChange={(e) => setUsuarioEditar({ ...usuarioEditar, nombre: e.target.value })}
+                      required 
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">Correo Electrónico</label>
+                    <input 
+                      type="email" 
+                      className="form-control" 
+                      value={usuarioEditar.email} 
+                      onChange={(e) => setUsuarioEditar({ ...usuarioEditar, email: e.target.value })}
+                      required 
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">URL de Foto de Perfil</label>
+                    <input 
+                      type="url" 
+                      className="form-control" 
+                      value={usuarioEditar.foto || ''} 
+                      onChange={(e) => setUsuarioEditar({ ...usuarioEditar, foto: e.target.value })}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">Rol</label>
+                    <select 
+                      className="form-select" 
+                      value={usuarioEditar.rol}
+                      onChange={(e) => setUsuarioEditar({ ...usuarioEditar, rol: e.target.value })}
+                    >
+                      <option value="cliente">Cliente</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label fw-bold">Teléfono</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      value={usuarioEditar.telefono || ''} 
+                      onChange={(e) => setUsuarioEditar({ ...usuarioEditar, telefono: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={() => setUsuarioEditar(null)}>Cancelar</button>
+                  <button type="submit" className="btn btn-danger">Guardar Cambios</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+export default AdminTablaUsuarios;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\AdminTablaVentas.jsx
+================================================================================
+
+import React, { useState } from 'react';
+import ModalBoleta from './ModalBoleta';
+
+function AdminTablaVentas({ ventas, setVentas, registrarActividad }) {
+  const [boletaSeleccionada, setBoletaSeleccionada] = useState(null);
+
+  const handleEliminarVenta = (id) => {
+    if (window.confirm(`¿Seguro que deseas anular/eliminar la orden ${id}?`)) {
+      setVentas(prev => prev.filter(v => v.id !== id));
+      registrarActividad(`Admin eliminó la orden #${id}`, 'admin');
+    }
+  };
+
+  return (
+    <section className="card shadow-sm mb-4 border-0">
+      <div className="card-header bg-dark text-white fw-bold d-flex justify-content-between align-items-center">
+        <span>🧾 Gestión de Ventas, Órdenes y Boletas ({ventas.length})</span>
+      </div>
+
+      <div className="table-responsive">
+        <table className="table table-hover align-middle mb-0">
+          <thead className="table-secondary">
+            <tr>
+              <th>ID Venta</th>
+              <th>Cliente</th>
+              <th>Evento</th>
+              <th>Fecha</th>
+              <th>Monto Total</th>
+              <th>Estado</th>
+              <th className="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ventas.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="text-center text-muted py-4">No hay ventas registradas.</td>
+              </tr>
+            ) : (
+              ventas.map((v) => (
+                <tr key={v.id}>
+                  <td><strong>#{v.id}</strong></td>
+                  <td>{v.cliente}</td>
+                  <td>{v.evento}</td>
+                  <td>{v.fecha}</td>
+                  <td className="fw-bold text-success">${Number(v.monto).toLocaleString('es-CL')}</td>
+                  <td>
+                    <span className={`badge ${v.estado === 'Completado' ? 'bg-success' : 'bg-warning text-dark'}`}>
+                      {v.estado}
+                    </span>
+                  </td>
+                  <td className="text-center">
+                    <button 
+                      className="btn btn-sm btn-outline-dark me-2"
+                      onClick={() => setBoletaSeleccionada(v)}
+                    >
+                      👁️ Ver Boleta / Editar
+                    </button>
+                    <button 
+                      className="btn btn-sm btn-outline-danger"
+                      onClick={() => handleEliminarVenta(v.id)}
+                    >
+                      🗑️ Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {boletaSeleccionada && (
+        <ModalBoleta 
+          venta={boletaSeleccionada}
+          setVentas={setVentas}
+          registrarActividad={registrarActividad}
+          onClose={() => setBoletaSeleccionada(null)}
+        />
+      )}
+    </section>
+  );
+}
+
+export default AdminTablaVentas;
+
+--------------------------------------------------------------------------------
+
+================================================================================
 ARCHIVO: dspecial-react\src\components\Boton.jsx
 ================================================================================
 
@@ -653,42 +919,107 @@ export default BotonCarrito;
 ARCHIVO: dspecial-react\src\components\Cabecera.jsx
 ================================================================================
 
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import "../css/header.css";
 
 function Cabecera({ usuario, logout }) {
-    return (
-        <header className="inicio-cabecilla">
-            <div className="logo">
-                <Link to="/">
-                    <img src="/img/logo2.png" alt="Logo"/>
-                </Link> 
-            </div>
-            
-            <div className="icono-usuario">
-                {usuario ? (
-                    <div className="usuario-logueado-header">
-                        <Link to="/login" className="link-perfil-header">
-                            <span className="avatar-mini">👤</span>
-                            <span className="nombre-usuario-header">{usuario.nombre}</span>
-                        </Link>
-                        
-                        <button 
-                            onClick={logout} 
-                            className="btn-logout-mini"
-                            title="Cerrar sesión"
-                        >
-                            🚪
-                        </button>
-                    </div>
+  const navigate = useNavigate();
+  const [mostrarModalLogout, setMostrarModalLogout] = useState(false);
+  const [mensajeNotificacion, setMensajeNotificacion] = useState('');
+
+  const confirmarCierreSesion = () => {
+    setMostrarModalLogout(false);
+    logout();
+    setMensajeNotificacion('👋 Has cerrado sesión correctamente.');
+    navigate('/');
+
+    setTimeout(() => {
+      setMensajeNotificacion('');
+    }, 3500);
+  };
+
+  return (
+    <>
+      {/* Toast / Banner Notificación de Cierre */}
+      {mensajeNotificacion && (
+        <div 
+          className="bg-dark text-white text-center py-2 px-3 position-fixed top-0 start-50 translate-middle-x shadow-lg" 
+          style={{ zIndex: 9999, borderRadius: '0 0 10px 10px', fontSize: '0.95rem' }}
+        >
+          {mensajeNotificacion}
+        </div>
+      )}
+
+      <header className="inicio-cabecilla">
+        <div className="logo">
+          <Link to="/">
+            <img src="/img/logo2.png" alt="Logo Tu Día Especial"/>
+          </Link> 
+        </div>
+        
+        <div className="icono-usuario">
+          {usuario ? (
+            <div className="usuario-logueado-header d-flex align-items-center gap-2">
+              <Link to="/perfil" className="link-perfil-header text-white text-decoration-none d-flex align-items-center gap-2" title="Ver mi perfil">
+                {usuario.foto ? (
+                  <img 
+                    src={usuario.foto} 
+                    alt={usuario.nombre} 
+                    className="rounded-circle border border-2 border-white"
+                    style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+                  />
                 ) : (
-                    <Link to="/login">
-                        <img src="/img/icono-usuario.png" alt="Usuario"/>
-                    </Link>
+                  <span className="avatar-mini fs-5">👤</span>
                 )}
+                <span className="nombre-usuario-header fw-bold">{usuario.nombre}</span>
+              </Link>
+              
+              <button 
+                type="button"
+                onClick={() => setMostrarModalLogout(true)} 
+                className="btn btn-sm btn-outline-light ms-1 px-2 py-1"
+                title="Cerrar sesión de forma segura"
+              >
+                🚪 Salir
+              </button>
             </div>
-        </header> 
-    );
+          ) : (
+            <Link to="/login">
+              <img src="/img/icono-usuario.png" alt="Usuario"/>
+            </Link>
+          )}
+        </div>
+      </header>
+
+      {/* MODAL MEJORADO DE CONFIRMACIÓN DE CIERRE DE SESIÓN */}
+      {mostrarModalLogout && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1050 }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content border-0 shadow-lg">
+              <div className="modal-header bg-dark text-white">
+                <h5 className="modal-title fw-bold">🚪 Confirmar Cierre de Sesión</h5>
+                <button type="button" className="btn-close btn-close-white" onClick={() => setMostrarModalLogout(false)}></button>
+              </div>
+              <div className="modal-body text-center py-4">
+                <div className="fs-1 mb-2">👋</div>
+                <h5>¿Seguro que deseas cerrar sesión, {usuario?.nombre}?</h5>
+                <p className="text-muted small mb-0">Tus datos guardados y reservas se mantendrán seguros.</p>
+              </div>
+              <div className="modal-footer bg-light justify-content-center">
+                <button type="button" className="btn btn-secondary px-4" onClick={() => setMostrarModalLogout(false)}>
+                  Cancelar
+                </button>
+                <button type="button" className="btn btn-danger px-4 fw-bold" onClick={confirmarCierreSesion}>
+                  Sí, Cerrar Sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
 
 export default Cabecera;
@@ -751,6 +1082,168 @@ function FiltroCatalogo({
 }
 
 export default FiltroCatalogo;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\components\ModalBoleta.jsx
+================================================================================
+
+import React, { useState } from 'react';
+
+function ModalBoleta({ venta, setVentas, registrarActividad, onClose }) {
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [datosForm, setDatosForm] = useState({ ...venta });
+
+  const handleGuardarVenta = (e) => {
+    e.preventDefault();
+    setVentas(prev => prev.map(v => v.id === datosForm.id ? datosForm : v));
+    registrarActividad(`Admin editó la boleta/orden #${datosForm.id}`, 'admin');
+    setModoEdicion(false);
+  };
+
+  return (
+    <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
+      <div className="modal-dialog modal-dialog-centered modal-lg">
+        <div className="modal-content shadow-lg border-0">
+          
+          <div className="modal-header bg-dark text-white">
+            <h5 className="modal-title fw-bold">
+              🧾 Boleta / Comprobante Electrónico #{venta.id}
+            </h5>
+            <button type="button" className="btn-close btn-close-white" onClick={onClose}></button>
+          </div>
+
+          <div className="modal-body p-4">
+            {!modoEdicion ? (
+              /* VISTA DE LA BOLETA */
+              <div className="border p-4 rounded bg-light">
+                <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                  <div>
+                    <h4 className="fw-bold text-danger mb-0">TU DÍA ESPECIAL SpA</h4>
+                    <small className="text-muted">RUT: 76.543.210-K • Servicios de Eventos</small>
+                  </div>
+                  <span className="badge bg-success fs-6">{venta.estado}</span>
+                </div>
+
+                <div className="row my-3">
+                  <div className="col-6">
+                    <p className="mb-1"><strong>Cliente:</strong> {venta.cliente}</p>
+                    <p className="mb-1"><strong>Medio de Pago:</strong> {venta.tarjeta || 'Tarjeta'}</p>
+                  </div>
+                  <div className="col-6 text-end">
+                    <p className="mb-1"><strong>Fecha:</strong> {venta.fecha}</p>
+                    <p className="mb-1"><strong>Banco:</strong> {venta.banco || 'Banco de Chile'}</p>
+                  </div>
+                </div>
+
+                <table className="table table-bordered my-3">
+                  <thead className="table-secondary">
+                    <tr>
+                      <th>Descripción del Evento</th>
+                      <th className="text-end">Monto Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{venta.evento}</td>
+                      <td className="text-end fw-bold">${Number(venta.monto).toLocaleString('es-CL')}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div className="text-end fs-4 fw-bold text-danger">
+                  Total Pagado: ${Number(venta.monto).toLocaleString('es-CL')}
+                </div>
+              </div>
+            ) : (
+              /* FORMULARIO DE EDICIÓN DE LA BOLETA POR ADMIN */
+              <form onSubmit={handleGuardarVenta}>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label className="form-label fw-bold">Nombre del Cliente</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      value={datosForm.cliente} 
+                      onChange={(e) => setDatosForm({ ...datosForm, cliente: e.target.value })}
+                      required 
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label fw-bold">Monto ($ CLP)</label>
+                    <input 
+                      type="number" 
+                      className="form-control" 
+                      value={datosForm.monto} 
+                      onChange={(e) => setDatosForm({ ...datosForm, monto: Number(e.target.value) })}
+                      required 
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label fw-bold">Estado de la Orden</label>
+                    <select 
+                      className="form-select" 
+                      value={datosForm.estado}
+                      onChange={(e) => setDatosForm({ ...datosForm, estado: e.target.value })}
+                    >
+                      <option value="Completado">Completado</option>
+                      <option value="Pendiente">Pendiente</option>
+                      <option value="Anulado">Anulado</option>
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label fw-bold">Banco</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      value={datosForm.banco || ''} 
+                      onChange={(e) => setDatosForm({ ...datosForm, banco: e.target.value })}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <label className="form-label fw-bold">Detalle del Evento</label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      value={datosForm.evento} 
+                      onChange={(e) => setDatosForm({ ...datosForm, evento: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-4 text-end">
+                  <button type="button" className="btn btn-secondary me-2" onClick={() => setModoEdicion(false)}>
+                    Cancelar
+                  </button>
+                  <button type="submit" className="btn btn-danger">
+                    Guardar Cambios en Boleta
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+
+          <div className="modal-footer bg-light">
+            {!modoEdicion ? (
+              <>
+                <button type="button" className="btn btn-outline-primary" onClick={() => setModoEdicion(true)}>
+                  ✏️ Editar Datos de esta Boleta
+                </button>
+                <button type="button" className="btn btn-dark" onClick={onClose}>
+                  Cerrar
+                </button>
+              </>
+            ) : null}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default ModalBoleta;
 
 --------------------------------------------------------------------------------
 
@@ -918,32 +1411,40 @@ import Boton from './Boton';
 import BotonCarrito from './BotonCarrito';
 import React from 'react';
 
-function Navegacion({totalItems}) {
+function Navegacion({ totalItems, usuario }) {
     return (
-        <>
         <nav>
-        <Link to="/">
-            <Boton  className="btn-n">Inicio</Boton>
-        </Link>
-        <Link to="/catalogo">
-            <Boton className="btn-n">Catalogo De Eventos</Boton>
-        </Link>
-        <Link to="/contacto">
-            <Boton className="btn-n">Contactanos</Boton>
-        </Link>
-        <Link to="/Nosotros">
-            <Boton className="btn-n">¿Quienes Somos?</Boton>
-        </Link>
-        <Link to="/Blog">
-            <Boton className="btn-n">Blog</Boton>
-        </Link>
-        
-        <BotonCarrito totalItems={totalItems}/>
+            <Link to="/">
+                <Boton className="btn-n">Inicio</Boton>
+            </Link>
+            <Link to="/catalogo">
+                <Boton className="btn-n">Catalogo De Eventos</Boton>
+            </Link>
+            <Link to="/contacto">
+                <Boton className="btn-n">Contactanos</Boton>
+            </Link>
+            <Link to="/Nosotros">
+                <Boton className="btn-n">¿Quienes Somos?</Boton>
+            </Link>
+            <Link to="/Blog">
+                <Boton className="btn-n">Blog</Boton>
+            </Link>
+
+            {/* BOTÓN SOLO VISIBLE PARA EL ADMINISTRADOR */}
+            {usuario && usuario.rol === 'admin' && (
+                <Link to="/admin">
+                    <Boton className="btn-n btn-admin-nav">
+                        ⚙️ Panel
+                    </Boton>
+                </Link>
+            )}
+
+            <BotonCarrito totalItems={totalItems} />
         </nav>
-        </>
-    )
+    );
 }
-export default Navegacion
+
+export default Navegacion;
 
 --------------------------------------------------------------------------------
 
@@ -1124,18 +1625,20 @@ document.addEventListener('DOMContentLoaded', function() {
 ARCHIVO: dspecial-react\src\pages\Admin.jsx
 ================================================================================
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AdminStats from '../components/AdminStats';
 import AdminFormProducto from '../components/AdminFormProducto';
 import AdminTablaProductos from '../components/AdminTablaProductos';
+import AdminTablaUsuarios from '../components/AdminTablaUsuarios';
+import AdminTablaVentas from '../components/AdminTablaVentas';
 import AdminBitacora from '../components/AdminBitacora';
 
-function Admin({ usuario, productos, setProductos, ventas, historial, registrarActividad }) {
+function Admin({ usuario, productos, setProductos, ventas, setVentas, usuarios, setUsuarios, historial, registrarActividad }) {
   const navigate = useNavigate();
+  const [pestana, setPestana] = useState('kpis'); // 'kpis' | 'productos' | 'usuarios' | 'ventas' | 'bitacora'
 
-  // Si no está logueado como Admin
   if (!usuario || usuario.rol !== 'admin') {
     return (
       <div className="container text-center py-5">
@@ -1150,10 +1653,8 @@ function Admin({ usuario, productos, setProductos, ventas, historial, registrarA
     );
   }
 
-  // Métricas
   const totalRecaudado = ventas.reduce((acc, v) => acc + Number(v.monto || 0), 0);
 
-  // Manejo de acciones
   const handleAgregarProducto = (nuevoProd) => {
     setProductos([nuevoProd, ...productos]);
     registrarActividad(`Admin agregó el producto: "${nuevoProd.titulo}" ($${nuevoProd.precio})`, 'admin');
@@ -1169,35 +1670,88 @@ function Admin({ usuario, productos, setProductos, ventas, historial, registrarA
 
   return (
     <main className="container py-4">
-      {/* Encabezado */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 className="fw-bold mb-0">⚙️ Dashboard Administrativo</h2>
-          <small className="text-muted">Gestión interactiva de catálogo y métricas</small>
+          <h2 className="fw-bold mb-0">⚙️ Panel Multi-Tareas Admin</h2>
+          <small className="text-muted">Gestión de usuarios, órdenes, boletas e inventario</small>
         </div>
         <span className="badge bg-dark fs-6 px-3 py-2">
           👤 {usuario.nombre} ({usuario.rol})
         </span>
       </div>
 
-      {/* 1. Métricas / KPIs */}
-      <AdminStats 
-        totalRecaudado={totalRecaudado} 
-        totalProductos={productos.length} 
-        totalVentas={ventas.length} 
-      />
+      {/* MENÚ DE SECCIONES (TABS) */}
+      <div className="btn-group w-100 mb-4" role="group">
+        <button 
+          className={`btn ${pestana === 'kpis' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('kpis')}
+        >
+          📊 Métricas
+        </button>
+        <button 
+          className={`btn ${pestana === 'usuarios' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('usuarios')}
+        >
+          👥 Usuarios
+        </button>
+        <button 
+          className={`btn ${pestana === 'ventas' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('ventas')}
+        >
+          🧾 Órdenes y Boletas
+        </button>
+        <button 
+          className={`btn ${pestana === 'productos' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('productos')}
+        >
+          📦 Catálogo
+        </button>
+        <button 
+          className={`btn ${pestana === 'bitacora' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('bitacora')}
+        >
+          📜 Bitácora
+        </button>
+      </div>
 
-      {/* 2. Formulario Agregar Producto */}
-      <AdminFormProducto onAgregarProducto={handleAgregarProducto} />
+      {/* CONTENIDO SEGÚN LA PESTAÑA SELECCIONADA */}
+      {pestana === 'kpis' && (
+        <AdminStats 
+          totalRecaudado={totalRecaudado} 
+          totalProductos={productos.length} 
+          totalVentas={ventas.length} 
+        />
+      )}
 
-      {/* 3. Tabla de Productos */}
-      <AdminTablaProductos 
-        productos={productos} 
-        onEliminarProducto={handleEliminarProducto} 
-      />
+      {pestana === 'usuarios' && (
+        <AdminTablaUsuarios 
+          usuarios={usuarios} 
+          setUsuarios={setUsuarios} 
+          registrarActividad={registrarActividad} 
+        />
+      )}
 
-      {/* 4. Bitácora de Registro */}
-      <AdminBitacora historial={historial} />
+      {pestana === 'ventas' && (
+        <AdminTablaVentas 
+          ventas={ventas} 
+          setVentas={setVentas} 
+          registrarActividad={registrarActividad} 
+        />
+      )}
+
+      {pestana === 'productos' && (
+        <>
+          <AdminFormProducto onAgregarProducto={handleAgregarProducto} />
+          <AdminTablaProductos 
+            productos={productos} 
+            onEliminarProducto={handleEliminarProducto} 
+          />
+        </>
+      )}
+
+      {pestana === 'bitacora' && (
+        <AdminBitacora historial={historial} />
+      )}
     </main>
   );
 }
@@ -1216,11 +1770,15 @@ import { useNavigate, Link } from 'react-router-dom';
 function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usuario }) {
   const navigate = useNavigate();
 
-  // 1. Estados del flujo de pago
-  const [paso, setPaso] = useState('formulario'); // 'formulario' | 'procesando' | 'exito'
-  const [metodoPago, setMetodoPago] = useState('tarjeta'); // 'tarjeta' | 'transferencia'
+  // Estados del flujo: 'formulario' | 'procesando' | 'exito' | 'error'
+  const [paso, setPaso] = useState('formulario'); 
+  const [metodoPago, setMetodoPago] = useState('tarjeta'); 
 
-  // 2. Estados del formulario
+  // Simulación de prueba para el desarrollador/usuario
+  const [simularError, setSimularError] = useState(false);
+  const [detalleError, setDetalleError] = useState(null);
+
+  // Campos del Formulario
   const [banco, setBanco] = useState('Banco de Chile');
   const [numeroTarjeta, setNumeroTarjeta] = useState('4500 1234 5678 9010');
   const [nombreTitular, setNombreTitular] = useState(usuario ? usuario.nombre : 'Juan Pérez');
@@ -1228,14 +1786,12 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
   const [cvv, setCvv] = useState('123');
   const [cuotas, setCuotas] = useState('1');
 
-  // 3. Estado para guardar el comprobante final
+  // Comprobante de Venta Exitosa
   const [comprobante, setComprobante] = useState(null);
 
-  // Cálculo del total a pagar
   const totalPagar = carrito.reduce((suma, item) => suma + Number(item.precio || 0), 0);
 
-  // Validación si el carrito está vacío al ingresar
-  if (carrito.length === 0 && paso !== 'exito') {
+  if (carrito.length === 0 && paso !== 'exito' && paso !== 'error') {
     return (
       <div className="container text-center py-5">
         <div className="alert alert-warning shadow-sm d-inline-block p-4">
@@ -1249,39 +1805,54 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
     );
   }
 
-  // Simulación de procesamiento de pago
+  // Procesador de pago ficticio con manejo de fallas
   const handlePagar = (e) => {
     e.preventDefault();
     setPaso('procesando');
 
-    // Simula 2.5 segundos de espera bancaria
     setTimeout(() => {
-      const idVenta = `V-${Math.floor(1000 + Math.random() * 9000)}`;
-      const nuevaVenta = {
-        id: idVenta,
-        cliente: usuario ? usuario.nombre : nombreTitular,
-        evento: carrito.map((item) => item.titulo).join(', '),
-        monto: totalPagar,
-        fecha: new Date().toLocaleDateString('es-CL'),
-        estado: 'Completado',
-        banco: banco,
-        tarjeta: metodoPago === 'tarjeta' ? `Tarjeta **** ${numeroTarjeta.slice(-4)}` : 'Transferencia'
-      };
+      // Regla de error: Si activó el switch o si la tarjeta termina en 0000 o CVV es 000
+      const esTarjetaInvalida = numeroTarjeta.endsWith('0000') || cvv === '000';
 
-      // Guardar venta en el estado global para el Admin
-      setVentas((prev) => [nuevaVenta, ...prev]);
+      if (simularError || esTarjetaInvalida) {
+        const motivosFalla = [
+          { codigo: 'ERR_INSUFFICIENT_FUNDS', titulo: 'Fondos o cupo insuficiente', causa: 'La cuenta o tarjeta seleccionada no posee el cupo disponible para completar la transacción.' },
+          { codigo: 'ERR_CARD_DECLINED', titulo: 'Transacción rechazada por el banco emisor', causa: 'Tu banco bloqueó temporalmente esta compra por medidas de seguridad o verificación.' },
+          { codigo: 'ERR_EXPIRED_CARD', titulo: 'Datos de tarjeta inválidos o vencidos', causa: 'El número de tarjeta, la fecha de expiración o el código CVV no coinciden.' }
+        ];
 
-      // Registrar en la Bitácora
-      registrarActividad(
-        `Compra procesada #${idVenta} por $${totalPagar.toLocaleString('es-CL')} (${banco})`,
-        usuario ? usuario.rol : 'cliente'
-      );
+        const errorSeleccionado = motivosFalla[Math.floor(Math.random() * motivosFalla.length)];
+        setDetalleError(errorSeleccionado);
+        setPaso('error');
 
-      // Guardar datos del comprobante, vaciar carrito y cambiar de vista
-      setComprobante(nuevaVenta);
-      setCarrito([]);
-      setPaso('exito');
-    }, 2500);
+        registrarActividad(
+          `🔴 INTENTO DE PAGO FALLIDO (${errorSeleccionado.codigo}) por $${totalPagar.toLocaleString('es-CL')} [${banco}]`,
+          usuario ? usuario.rol : 'cliente'
+        );
+      } else {
+        const idVenta = `V-${Math.floor(1000 + Math.random() * 9000)}`;
+        const nuevaVenta = {
+          id: idVenta,
+          cliente: usuario ? usuario.nombre : nombreTitular,
+          evento: carrito.map((item) => item.titulo).join(', '),
+          monto: totalPagar,
+          fecha: new Date().toLocaleDateString('es-CL'),
+          estado: 'Completado',
+          banco: banco,
+          tarjeta: metodoPago === 'tarjeta' ? `Tarjeta **** ${numeroTarjeta.slice(-4)}` : 'Transferencia'
+        };
+
+        setVentas((prev) => [nuevaVenta, ...prev]);
+        registrarActividad(
+          `🟢 Compra procesada exitosamente #${idVenta} por $${totalPagar.toLocaleString('es-CL')} (${banco})`,
+          usuario ? usuario.rol : 'cliente'
+        );
+
+        setComprobante(nuevaVenta);
+        setCarrito([]);
+        setPaso('exito');
+      }
+    }, 2200);
   };
 
   return (
@@ -1291,15 +1862,28 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
       {paso === 'formulario' && (
         <div className="row g-4">
           
-          {/* Columna Izquierda: Formulario e Datos */}
           <div className="col-12 col-md-7">
             <div className="card shadow-sm border-0">
-              <div className="card-header bg-dark text-white fw-bold py-3">
-                💳 Pasarela de Pago Segura (Ficticia)
+              <div className="card-header bg-dark text-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                <span>💳 Pasarela de Pago Segura</span>
+                <span className="badge bg-danger">WebPay / Transbank</span>
               </div>
               <div className="card-body p-4">
                 
-                {/* Selector de Método de Pago */}
+                {/* SIMULADOR DE PRUEBA */}
+                <div className="form-check form-switch mb-4 p-2 bg-light rounded border">
+                  <input 
+                    className="form-check-input ms-0 me-2" 
+                    type="checkbox" 
+                    id="switchError"
+                    checked={simularError}
+                    onChange={(e) => setSimularError(e.target.checked)}
+                  />
+                  <label className="form-check-label fw-bold text-dark small" htmlFor="switchError">
+                    🧪 Modo Pruebas: {simularError ? '🔴 Simular Error de Pago' : '🟢 Simular Pago Exitoso'}
+                  </label>
+                </div>
+
                 <div className="btn-group w-100 mb-4" role="group">
                   <button
                     type="button"
@@ -1313,12 +1897,11 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
                     className={`btn ${metodoPago === 'transferencia' ? 'btn-dark' : 'btn-outline-dark'}`}
                     onClick={() => setMetodoPago('transferencia')}
                   >
-                    🏦 Transferencia
+                    🏦 Transferencia Directa
                   </button>
                 </div>
 
                 <form onSubmit={handlePagar}>
-                  {/* Selección de Banco */}
                   <div className="mb-3">
                     <label className="form-label fw-bold">Selecciona tu Banco</label>
                     <select 
@@ -1327,7 +1910,7 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
                       onChange={(e) => setBanco(e.target.value)}
                     >
                       <option value="Banco de Chile">Banco de Chile</option>
-                      <option value="BancoEstado">BancoEstado / RUT</option>
+                      <option value="BancoEstado">BancoEstado / CuentaRUT</option>
                       <option value="Banco Santander">Banco Santander</option>
                       <option value="BCI">BCI</option>
                       <option value="Scotiabank">Scotiabank</option>
@@ -1336,7 +1919,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
 
                   {metodoPago === 'tarjeta' ? (
                     <>
-                      {/* Vista Previa Visual de Tarjeta */}
                       <div className="card bg-secondary text-white p-3 mb-3 shadow-sm rounded-3">
                         <div className="d-flex justify-content-between align-items-center mb-3">
                           <span className="fw-bold fs-5">{banco}</span>
@@ -1351,7 +1933,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
                         </div>
                       </div>
 
-                      {/* Formulario Tarjeta */}
                       <div className="mb-3">
                         <label className="form-label fw-bold">Número de Tarjeta</label>
                         <input 
@@ -1418,7 +1999,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
                       </div>
                     </>
                   ) : (
-                    /* Vista de Transferencia */
                     <div className="alert alert-info border-0 p-3 mb-4">
                       <h6>📌 Datos para Transferencia Bancaria:</h6>
                       <ul className="mb-0 small">
@@ -1440,7 +2020,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
             </div>
           </div>
 
-          {/* Columna Derecha: Resumen del Pedido */}
           <div className="col-12 col-md-5">
             <div className="card shadow-sm border-0">
               <div className="card-header bg-secondary text-white fw-bold py-3">
@@ -1468,18 +2047,68 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
         </div>
       )}
 
-      {/* ---------------- VISTA 2: PROCESANDO (ANIMACIÓN BOOTSTRAP) ---------------- */}
+      {/* ---------------- VISTA 2: PROCESANDO ---------------- */}
       {paso === 'procesando' && (
         <div className="text-center py-5 my-5">
           <div className="spinner-border text-danger" style={{ width: '4rem', height: '4rem' }} role="status">
             <span className="visually-hidden">Procesando...</span>
           </div>
-          <h4 className="mt-4 fw-bold">Procesando pago con {banco}...</h4>
+          <h4 className="mt-4 fw-bold">Conectando con {banco}...</h4>
           <p className="text-muted">Por favor no cierres ni recargues la página.</p>
         </div>
       )}
 
-      {/* ---------------- VISTA 3: COMPROBANTE DE ÉXITO ---------------- */}
+      {/* ---------------- VISTA 3: PANTALLA DE ERROR DE PAGO ---------------- */}
+      {paso === 'error' && detalleError && (
+        <div className="card shadow-lg border-0 mx-auto my-4" style={{ maxWidth: '650px' }}>
+          <div className="card-header bg-danger text-white text-center py-4">
+            <div className="fs-1 mb-1">⚠️</div>
+            <h3 className="fw-bold mb-0">¡Pago No Procesado!</h3>
+            <small className="text-white-50">Código: {detalleError.codigo}</small>
+          </div>
+
+          <div className="card-body p-4">
+            <div className="alert alert-danger border text-start mb-4">
+              <h5 className="alert-heading fw-bold mb-2">❌ {detalleError.titulo}</h5>
+              <p className="mb-0 small">{detalleError.causa}</p>
+            </div>
+
+            <div className="bg-light p-3 rounded mb-4 border">
+              <h6 className="fw-bold text-dark mb-2">💡 Sugerencias para resolverlo:</h6>
+              <ul className="mb-0 small text-muted ps-3">
+                <li>Verifica que el número de tarjeta, fecha y CVV estén correctamente escritos.</li>
+                <li>Asegúrate de contar con cupo o saldo disponible suficiente.</li>
+                <li>Consulta con tu banco si tienes compras por internet habilitadas.</li>
+                <li>Prueba cambiar a opción de <strong>Transferencia Bancaria</strong>.</li>
+              </ul>
+            </div>
+
+            <div className="d-grid gap-2">
+              <button 
+                className="btn btn-danger py-2 fw-bold"
+                onClick={() => setPaso('formulario')}
+              >
+                🔄 Reintentar Pago con otros datos
+              </button>
+              <button 
+                className="btn btn-outline-dark py-2"
+                onClick={() => {
+                  setMetodoPago('transferencia');
+                  setSimularError(false);
+                  setPaso('formulario');
+                }}
+              >
+                🏦 Cambiar a Transferencia Bancaria
+              </button>
+              <Link to="/carrito" className="btn btn-link text-muted text-center mt-1">
+                ← Volver al Carrito
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------- VISTA 4: COMPROBANTE DE ÉXITO ---------------- */}
       {paso === 'exito' && comprobante && (
         <div className="card shadow border-0 mx-auto" style={{ maxWidth: '600px' }}>
           <div className="card-header bg-success text-white text-center py-4">
@@ -1524,9 +2153,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
             </table>
 
             <div className="d-grid gap-2 mt-4">
-              <button className="btn btn-dark" onClick={() => navigate('/admin')}>
-                ⚙️ Ver Venta en el Dashboard Admin
-              </button>
               <button className="btn btn-outline-secondary" onClick={() => navigate('/')}>
                 🏠 Volver al Inicio
               </button>
@@ -1840,6 +2466,196 @@ function Nosotros() {
 }
 
 export default Nosotros;
+
+--------------------------------------------------------------------------------
+
+================================================================================
+ARCHIVO: dspecial-react\src\pages\Perfil.jsx
+================================================================================
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+function Perfil({ usuario, setUsuario, setUsuarios, registrarActividad }) {
+  const navigate = useNavigate();
+
+  if (!usuario) {
+    return (
+      <div className="container text-center py-5">
+        <div className="alert alert-warning shadow-sm d-inline-block p-4">
+          <h4>🔒 Sesión no iniciada</h4>
+          <p>Debes iniciar sesión para ver y editar tu perfil.</p>
+          <button className="btn btn-dark" onClick={() => navigate('/login')}>
+            Ir a Iniciar Sesión
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const [nombre, setNombre] = useState(usuario.nombre || '');
+  const [email, setEmail] = useState(usuario.email || '');
+  const [telefono, setTelefono] = useState(usuario.telefono || '+56 9 1234 5678');
+  const [direccion, setDireccion] = useState(usuario.direccion || 'Av. Providencia 1234, Santiago');
+  const [foto, setFoto] = useState(usuario.foto || '');
+  const [mensajeGuardado, setMensajeGuardado] = useState(false);
+
+  // Convertir imagen seleccionada a Base64
+  const handleSubirFotoLocal = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert("La imagen debe ser menor a 2MB.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFoto(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const usuarioActualizado = {
+      ...usuario,
+      nombre,
+      email,
+      telefono,
+      direccion,
+      foto
+    };
+
+    // Actualiza sesión actual y listado general
+    setUsuario(usuarioActualizado);
+    if (setUsuarios) {
+      setUsuarios(prev => prev.map(u => u.id === usuario.id ? usuarioActualizado : u));
+    }
+
+    registrarActividad(`Usuario ${usuario.nombre} actualizó su perfil y foto`, usuario.rol);
+
+    setMensajeGuardado(true);
+    setTimeout(() => setMensajeGuardado(false), 3000);
+  };
+
+  return (
+    <main className="container py-4" style={{ maxWidth: '700px' }}>
+      <div className="card shadow border-0">
+        <div className="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
+          <h4 className="mb-0 fw-bold">👤 Mi Perfil de Usuario</h4>
+          <span className={`badge ${usuario.rol === 'admin' ? 'bg-primary' : 'bg-info text-dark'}`}>
+            {usuario.rol.toUpperCase()}
+          </span>
+        </div>
+
+        <div className="card-body p-4">
+          {mensajeGuardado && (
+            <div className="alert alert-success alert-dismissible fade show mb-4" role="alert">
+              ✅ <strong>¡Perfil actualizado con éxito!</strong> Los cambios han sido guardados.
+            </div>
+          )}
+
+          {/* ÁREA DE FOTO DE PERFIL (SOLO SUBIR ARCHIVO) */}
+          <div className="text-center mb-4">
+            <div className="position-relative d-inline-block">
+              {foto ? (
+                <img 
+                  src={foto} 
+                  alt="Foto de Perfil" 
+                  className="rounded-circle shadow border border-3 border-danger"
+                  style={{ width: '130px', height: '130px', objectFit: 'cover' }}
+                />
+              ) : (
+                <div 
+                  className="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow border border-3 border-danger mx-auto"
+                  style={{ width: '130px', height: '130px', fontSize: '3.5rem' }}
+                >
+                  👤
+                </div>
+              )}
+            </div>
+
+            <div className="mt-3">
+              <div className="d-flex justify-content-center gap-2">
+                <label className="btn btn-dark fw-bold px-3">
+                  📁 Subir Imagen
+                  <input type="file" accept="image/*" hidden onChange={handleSubirFotoLocal} />
+                </label>
+                {foto && (
+                  <button type="button" className="btn btn-outline-danger" onClick={() => setFoto('')}>
+                    🗑️ Eliminar Foto
+                  </button>
+                )}
+              </div>
+              <small className="text-muted d-block mt-2">Archivos admitidos: JPG, PNG (Máx. 2MB)</small>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label fw-bold">Nombre Completo</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                value={nombre} 
+                onChange={(e) => setNombre(e.target.value)}
+                required 
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label fw-bold">Correo Electrónico</label>
+              <input 
+                type="email" 
+                className="form-control" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                required 
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label fw-bold">Teléfono de Contacto</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                value={telefono} 
+                onChange={(e) => setTelefono(e.target.value)}
+                required 
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label fw-bold">Dirección Principal</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                value={direccion} 
+                onChange={(e) => setDireccion(e.target.value)}
+                required 
+              />
+            </div>
+
+            <div className="d-grid gap-2 mt-4">
+              <button type="submit" className="btn btn-danger fw-bold py-2 fs-5">
+                💾 Guardar Cambios
+              </button>
+              {usuario.rol === 'admin' && (
+                <button type="button" className="btn btn-outline-dark" onClick={() => navigate('/admin')}>
+                  ⚙️ Ir al Panel de Administración
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default Perfil;
 
 --------------------------------------------------------------------------------
 

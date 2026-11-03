@@ -4,11 +4,15 @@ import { useNavigate, Link } from 'react-router-dom';
 function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usuario }) {
   const navigate = useNavigate();
 
-  // 1. Estados del flujo de pago
-  const [paso, setPaso] = useState('formulario'); // 'formulario' | 'procesando' | 'exito'
-  const [metodoPago, setMetodoPago] = useState('tarjeta'); // 'tarjeta' | 'transferencia'
+  // Estados del flujo: 'formulario' | 'procesando' | 'exito' | 'error'
+  const [paso, setPaso] = useState('formulario'); 
+  const [metodoPago, setMetodoPago] = useState('tarjeta'); 
 
-  // 2. Estados del formulario
+  // Simulación de prueba para el desarrollador/usuario
+  const [simularError, setSimularError] = useState(false);
+  const [detalleError, setDetalleError] = useState(null);
+
+  // Campos del Formulario
   const [banco, setBanco] = useState('Banco de Chile');
   const [numeroTarjeta, setNumeroTarjeta] = useState('4500 1234 5678 9010');
   const [nombreTitular, setNombreTitular] = useState(usuario ? usuario.nombre : 'Juan Pérez');
@@ -16,14 +20,12 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
   const [cvv, setCvv] = useState('123');
   const [cuotas, setCuotas] = useState('1');
 
-  // 3. Estado para guardar el comprobante final
+  // Comprobante de Venta Exitosa
   const [comprobante, setComprobante] = useState(null);
 
-  // Cálculo del total a pagar
   const totalPagar = carrito.reduce((suma, item) => suma + Number(item.precio || 0), 0);
 
-  // Validación si el carrito está vacío al ingresar
-  if (carrito.length === 0 && paso !== 'exito') {
+  if (carrito.length === 0 && paso !== 'exito' && paso !== 'error') {
     return (
       <div className="container text-center py-5">
         <div className="alert alert-warning shadow-sm d-inline-block p-4">
@@ -37,39 +39,54 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
     );
   }
 
-  // Simulación de procesamiento de pago
+  // Procesador de pago ficticio con manejo de fallas
   const handlePagar = (e) => {
     e.preventDefault();
     setPaso('procesando');
 
-    // Simula 2.5 segundos de espera bancaria
     setTimeout(() => {
-      const idVenta = `V-${Math.floor(1000 + Math.random() * 9000)}`;
-      const nuevaVenta = {
-        id: idVenta,
-        cliente: usuario ? usuario.nombre : nombreTitular,
-        evento: carrito.map((item) => item.titulo).join(', '),
-        monto: totalPagar,
-        fecha: new Date().toLocaleDateString('es-CL'),
-        estado: 'Completado',
-        banco: banco,
-        tarjeta: metodoPago === 'tarjeta' ? `Tarjeta **** ${numeroTarjeta.slice(-4)}` : 'Transferencia'
-      };
+      // Regla de error: Si activó el switch o si la tarjeta termina en 0000 o CVV es 000
+      const esTarjetaInvalida = numeroTarjeta.endsWith('0000') || cvv === '000';
 
-      // Guardar venta en el estado global para el Admin
-      setVentas((prev) => [nuevaVenta, ...prev]);
+      if (simularError || esTarjetaInvalida) {
+        const motivosFalla = [
+          { codigo: 'ERR_INSUFFICIENT_FUNDS', titulo: 'Fondos o cupo insuficiente', causa: 'La cuenta o tarjeta seleccionada no posee el cupo disponible para completar la transacción.' },
+          { codigo: 'ERR_CARD_DECLINED', titulo: 'Transacción rechazada por el banco emisor', causa: 'Tu banco bloqueó temporalmente esta compra por medidas de seguridad o verificación.' },
+          { codigo: 'ERR_EXPIRED_CARD', titulo: 'Datos de tarjeta inválidos o vencidos', causa: 'El número de tarjeta, la fecha de expiración o el código CVV no coinciden.' }
+        ];
 
-      // Registrar en la Bitácora
-      registrarActividad(
-        `Compra procesada #${idVenta} por $${totalPagar.toLocaleString('es-CL')} (${banco})`,
-        usuario ? usuario.rol : 'cliente'
-      );
+        const errorSeleccionado = motivosFalla[Math.floor(Math.random() * motivosFalla.length)];
+        setDetalleError(errorSeleccionado);
+        setPaso('error');
 
-      // Guardar datos del comprobante, vaciar carrito y cambiar de vista
-      setComprobante(nuevaVenta);
-      setCarrito([]);
-      setPaso('exito');
-    }, 2500);
+        registrarActividad(
+          `🔴 INTENTO DE PAGO FALLIDO (${errorSeleccionado.codigo}) por $${totalPagar.toLocaleString('es-CL')} [${banco}]`,
+          usuario ? usuario.rol : 'cliente'
+        );
+      } else {
+        const idVenta = `V-${Math.floor(1000 + Math.random() * 9000)}`;
+        const nuevaVenta = {
+          id: idVenta,
+          cliente: usuario ? usuario.nombre : nombreTitular,
+          evento: carrito.map((item) => item.titulo).join(', '),
+          monto: totalPagar,
+          fecha: new Date().toLocaleDateString('es-CL'),
+          estado: 'Completado',
+          banco: banco,
+          tarjeta: metodoPago === 'tarjeta' ? `Tarjeta **** ${numeroTarjeta.slice(-4)}` : 'Transferencia'
+        };
+
+        setVentas((prev) => [nuevaVenta, ...prev]);
+        registrarActividad(
+          `🟢 Compra procesada exitosamente #${idVenta} por $${totalPagar.toLocaleString('es-CL')} (${banco})`,
+          usuario ? usuario.rol : 'cliente'
+        );
+
+        setComprobante(nuevaVenta);
+        setCarrito([]);
+        setPaso('exito');
+      }
+    }, 2200);
   };
 
   return (
@@ -79,15 +96,28 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
       {paso === 'formulario' && (
         <div className="row g-4">
           
-          {/* Columna Izquierda: Formulario e Datos */}
           <div className="col-12 col-md-7">
             <div className="card shadow-sm border-0">
-              <div className="card-header bg-dark text-white fw-bold py-3">
-                💳 Pasarela de Pago Segura (Ficticia)
+              <div className="card-header bg-dark text-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                <span>💳 Pasarela de Pago Segura</span>
+                <span className="badge bg-danger">WebPay / Transbank</span>
               </div>
               <div className="card-body p-4">
                 
-                {/* Selector de Método de Pago */}
+                {/* SIMULADOR DE PRUEBA */}
+                <div className="form-check form-switch mb-4 p-2 bg-light rounded border">
+                  <input 
+                    className="form-check-input ms-0 me-2" 
+                    type="checkbox" 
+                    id="switchError"
+                    checked={simularError}
+                    onChange={(e) => setSimularError(e.target.checked)}
+                  />
+                  <label className="form-check-label fw-bold text-dark small" htmlFor="switchError">
+                    🧪 Modo Pruebas: {simularError ? '🔴 Simular Error de Pago' : '🟢 Simular Pago Exitoso'}
+                  </label>
+                </div>
+
                 <div className="btn-group w-100 mb-4" role="group">
                   <button
                     type="button"
@@ -101,12 +131,11 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
                     className={`btn ${metodoPago === 'transferencia' ? 'btn-dark' : 'btn-outline-dark'}`}
                     onClick={() => setMetodoPago('transferencia')}
                   >
-                    🏦 Transferencia
+                    🏦 Transferencia Directa
                   </button>
                 </div>
 
                 <form onSubmit={handlePagar}>
-                  {/* Selección de Banco */}
                   <div className="mb-3">
                     <label className="form-label fw-bold">Selecciona tu Banco</label>
                     <select 
@@ -115,7 +144,7 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
                       onChange={(e) => setBanco(e.target.value)}
                     >
                       <option value="Banco de Chile">Banco de Chile</option>
-                      <option value="BancoEstado">BancoEstado / RUT</option>
+                      <option value="BancoEstado">BancoEstado / CuentaRUT</option>
                       <option value="Banco Santander">Banco Santander</option>
                       <option value="BCI">BCI</option>
                       <option value="Scotiabank">Scotiabank</option>
@@ -124,7 +153,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
 
                   {metodoPago === 'tarjeta' ? (
                     <>
-                      {/* Vista Previa Visual de Tarjeta */}
                       <div className="card bg-secondary text-white p-3 mb-3 shadow-sm rounded-3">
                         <div className="d-flex justify-content-between align-items-center mb-3">
                           <span className="fw-bold fs-5">{banco}</span>
@@ -139,7 +167,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
                         </div>
                       </div>
 
-                      {/* Formulario Tarjeta */}
                       <div className="mb-3">
                         <label className="form-label fw-bold">Número de Tarjeta</label>
                         <input 
@@ -206,7 +233,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
                       </div>
                     </>
                   ) : (
-                    /* Vista de Transferencia */
                     <div className="alert alert-info border-0 p-3 mb-4">
                       <h6>📌 Datos para Transferencia Bancaria:</h6>
                       <ul className="mb-0 small">
@@ -228,7 +254,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
             </div>
           </div>
 
-          {/* Columna Derecha: Resumen del Pedido */}
           <div className="col-12 col-md-5">
             <div className="card shadow-sm border-0">
               <div className="card-header bg-secondary text-white fw-bold py-3">
@@ -256,18 +281,68 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
         </div>
       )}
 
-      {/* ---------------- VISTA 2: PROCESANDO (ANIMACIÓN BOOTSTRAP) ---------------- */}
+      {/* ---------------- VISTA 2: PROCESANDO ---------------- */}
       {paso === 'procesando' && (
         <div className="text-center py-5 my-5">
           <div className="spinner-border text-danger" style={{ width: '4rem', height: '4rem' }} role="status">
             <span className="visually-hidden">Procesando...</span>
           </div>
-          <h4 className="mt-4 fw-bold">Procesando pago con {banco}...</h4>
+          <h4 className="mt-4 fw-bold">Conectando con {banco}...</h4>
           <p className="text-muted">Por favor no cierres ni recargues la página.</p>
         </div>
       )}
 
-      {/* ---------------- VISTA 3: COMPROBANTE DE ÉXITO ---------------- */}
+      {/* ---------------- VISTA 3: PANTALLA DE ERROR DE PAGO ---------------- */}
+      {paso === 'error' && detalleError && (
+        <div className="card shadow-lg border-0 mx-auto my-4" style={{ maxWidth: '650px' }}>
+          <div className="card-header bg-danger text-white text-center py-4">
+            <div className="fs-1 mb-1">⚠️</div>
+            <h3 className="fw-bold mb-0">¡Pago No Procesado!</h3>
+            <small className="text-white-50">Código: {detalleError.codigo}</small>
+          </div>
+
+          <div className="card-body p-4">
+            <div className="alert alert-danger border text-start mb-4">
+              <h5 className="alert-heading fw-bold mb-2">❌ {detalleError.titulo}</h5>
+              <p className="mb-0 small">{detalleError.causa}</p>
+            </div>
+
+            <div className="bg-light p-3 rounded mb-4 border">
+              <h6 className="fw-bold text-dark mb-2">💡 Sugerencias para resolverlo:</h6>
+              <ul className="mb-0 small text-muted ps-3">
+                <li>Verifica que el número de tarjeta, fecha y CVV estén correctamente escritos.</li>
+                <li>Asegúrate de contar con cupo o saldo disponible suficiente.</li>
+                <li>Consulta con tu banco si tienes compras por internet habilitadas.</li>
+                <li>Prueba cambiar a opción de <strong>Transferencia Bancaria</strong>.</li>
+              </ul>
+            </div>
+
+            <div className="d-grid gap-2">
+              <button 
+                className="btn btn-danger py-2 fw-bold"
+                onClick={() => setPaso('formulario')}
+              >
+                🔄 Reintentar Pago con otros datos
+              </button>
+              <button 
+                className="btn btn-outline-dark py-2"
+                onClick={() => {
+                  setMetodoPago('transferencia');
+                  setSimularError(false);
+                  setPaso('formulario');
+                }}
+              >
+                🏦 Cambiar a Transferencia Bancaria
+              </button>
+              <Link to="/carrito" className="btn btn-link text-muted text-center mt-1">
+                ← Volver al Carrito
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------- VISTA 4: COMPROBANTE DE ÉXITO ---------------- */}
       {paso === 'exito' && comprobante && (
         <div className="card shadow border-0 mx-auto" style={{ maxWidth: '600px' }}>
           <div className="card-header bg-success text-white text-center py-4">
@@ -312,9 +387,6 @@ function Checkout({ carrito = [], setCarrito, setVentas, registrarActividad, usu
             </table>
 
             <div className="d-grid gap-2 mt-4">
-              <button className="btn btn-dark" onClick={() => navigate('/admin')}>
-                ⚙️ Ver Venta en el Dashboard Admin
-              </button>
               <button className="btn btn-outline-secondary" onClick={() => navigate('/')}>
                 🏠 Volver al Inicio
               </button>

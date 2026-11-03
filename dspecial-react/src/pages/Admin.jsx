@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AdminStats from '../components/AdminStats';
 import AdminFormProducto from '../components/AdminFormProducto';
 import AdminTablaProductos from '../components/AdminTablaProductos';
+import AdminTablaUsuarios from '../components/AdminTablaUsuarios';
+import AdminTablaVentas from '../components/AdminTablaVentas';
 import AdminBitacora from '../components/AdminBitacora';
 
-function Admin({ usuario, productos, setProductos, ventas, historial, registrarActividad }) {
+function Admin({ usuario, productos, setProductos, ventas, setVentas, usuarios, setUsuarios, historial, registrarActividad }) {
   const navigate = useNavigate();
+  const [pestana, setPestana] = useState('kpis'); // 'kpis' | 'productos' | 'usuarios' | 'ventas' | 'bitacora'
 
-  // Si no está logueado como Admin
   if (!usuario || usuario.rol !== 'admin') {
     return (
       <div className="container text-center py-5">
@@ -24,10 +26,8 @@ function Admin({ usuario, productos, setProductos, ventas, historial, registrarA
     );
   }
 
-  // Métricas
   const totalRecaudado = ventas.reduce((acc, v) => acc + Number(v.monto || 0), 0);
 
-  // Manejo de acciones
   const handleAgregarProducto = (nuevoProd) => {
     setProductos([nuevoProd, ...productos]);
     registrarActividad(`Admin agregó el producto: "${nuevoProd.titulo}" ($${nuevoProd.precio})`, 'admin');
@@ -43,35 +43,88 @@ function Admin({ usuario, productos, setProductos, ventas, historial, registrarA
 
   return (
     <main className="container py-4">
-      {/* Encabezado */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 className="fw-bold mb-0">⚙️ Panel multi tareas del admin </h2>
-          <small className="text-muted">Gestión interactiva de catálogo y métricas</small>
+          <h2 className="fw-bold mb-0">⚙️ Panel Multi-Tareas Admin</h2>
+          <small className="text-muted">Gestión de usuarios, órdenes, boletas e inventario</small>
         </div>
         <span className="badge bg-dark fs-6 px-3 py-2">
           👤 {usuario.nombre} ({usuario.rol})
         </span>
       </div>
 
-      {/* 1. Métricas / KPIs */}
-      <AdminStats 
-        totalRecaudado={totalRecaudado} 
-        totalProductos={productos.length} 
-        totalVentas={ventas.length} 
-      />
+      {/* MENÚ DE SECCIONES (TABS) */}
+      <div className="btn-group w-100 mb-4" role="group">
+        <button 
+          className={`btn ${pestana === 'kpis' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('kpis')}
+        >
+          📊 Métricas
+        </button>
+        <button 
+          className={`btn ${pestana === 'usuarios' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('usuarios')}
+        >
+          👥 Usuarios
+        </button>
+        <button 
+          className={`btn ${pestana === 'ventas' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('ventas')}
+        >
+          🧾 Órdenes y Boletas
+        </button>
+        <button 
+          className={`btn ${pestana === 'productos' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('productos')}
+        >
+          📦 Catálogo
+        </button>
+        <button 
+          className={`btn ${pestana === 'bitacora' ? 'btn-dark' : 'btn-outline-dark'}`}
+          onClick={() => setPestana('bitacora')}
+        >
+          📜 Bitácora
+        </button>
+      </div>
 
-      {/* 2. Formulario Agregar Producto */}
-      <AdminFormProducto onAgregarProducto={handleAgregarProducto} />
+      {/* CONTENIDO SEGÚN LA PESTAÑA SELECCIONADA */}
+      {pestana === 'kpis' && (
+        <AdminStats 
+          totalRecaudado={totalRecaudado} 
+          totalProductos={productos.length} 
+          totalVentas={ventas.length} 
+        />
+      )}
 
-      {/* 3. Tabla de Productos */}
-      <AdminTablaProductos 
-        productos={productos} 
-        onEliminarProducto={handleEliminarProducto} 
-      />
+      {pestana === 'usuarios' && (
+        <AdminTablaUsuarios 
+          usuarios={usuarios} 
+          setUsuarios={setUsuarios} 
+          registrarActividad={registrarActividad} 
+        />
+      )}
 
-      {/* 4. Bitácora de Registro */}
-      <AdminBitacora historial={historial} />
+      {pestana === 'ventas' && (
+        <AdminTablaVentas 
+          ventas={ventas} 
+          setVentas={setVentas} 
+          registrarActividad={registrarActividad} 
+        />
+      )}
+
+      {pestana === 'productos' && (
+        <>
+          <AdminFormProducto onAgregarProducto={handleAgregarProducto} />
+          <AdminTablaProductos 
+            productos={productos} 
+            onEliminarProducto={handleEliminarProducto} 
+          />
+        </>
+      )}
+
+      {pestana === 'bitacora' && (
+        <AdminBitacora historial={historial} />
+      )}
     </main>
   );
 }
